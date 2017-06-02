@@ -1,7 +1,50 @@
+
+<script type="text/javascript" src="/javascripts/AcidWorxAddRelease.js"></script>
 <br>
 <div id="page">
   <div class="pageText">
-    <p><a href="/manage_release/add">Add Release</a></p>
-    <p><a href="/manage_release/show">Show Release</a></p>
+
+  <div>
+  	<label>Artist</label>
+  	<input type=text>
+  </div>
+
+  <div>
+  	<label>Title</label>
+  	<input type=text>
+  </div>
+
+  <div>
+  	<label>Release date</label>
+  	<input type="text">
+  </div>
+
+  <div>
+  	<label>Format</label>
+  	<input type=text>
+  </div>
+  <br>
+  <div>
+  	<label>Image</label>
+  	<br><br>
+  	<input type=file>
+  </div>
+
+  <br>
+  Tracks
+  <br>
+  <div id="tasks"></div>
+  <br>
+  <div>
+  	<button id="addTrack">Add track</button>
+  </div>
+
+<br>
+<br>
+  <div>
+  	<button>Add</button>
+  </div>
+
+
   </div>
 </div>
