@@ -1,0 +1,50 @@
+# configuration file for development environment
+
+# the logger engine to use
+# console: log messages to STDOUT (your console where you started the
+#          application server)
+# file:    log message to a file in log/
+logger: "console"
+
+# the log level for this environment
+# core is the lowest, it shows Dancer2's core log messages as well as yours
+# (debug, info, warning and error)
+log: "core"
+
+# should Dancer2 consider warnings as critical errors?
+warnings: 1
+
+# should Dancer2 show a stacktrace when an error is caught?
+# if set to yes, public/500.html will be ignored and either
+# views/500.tt or a default error template will be used.
+show_errors: 1
+
+# print the banner
+startup_info: 1
+
+engines:
+    session:
+        Storable:
+            session_dir: "/tmp/dancer-sessions"
+            cookie_duration: 3600    # Default cookie timeout in seconds
+
+plugins:
+    Auth::Extensible:
+        #no_default_pages: 1
+        login_template: '/home/acidworx/dev/AcidWorx/views/login.tt'
+        realms:
+            users:
+                provider: 'Database'
+    Database:
+        driver: 'mysql'
+        database: 'acidworx'
+        host: '192.168.1.10'
+        port: 3306
+        username: 'acidworx'
+        password: 'TrippyMoon1234'
+        connection_check_threshold: 10
+        dbi_params:
+            RaiseError: 1
+            AutoCommit: 1
+        on_connect_do: ["SET NAMES 'utf8'", "SET CHARACTER SET 'utf8'" ]
+        log_queries: 1

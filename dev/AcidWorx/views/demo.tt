@@ -1,0 +1,102 @@
+<script src="javascripts/demo.js"></script>
+
+<%  IF errors  %>
+        <div id="server-error">
+        <ul>
+            <%  FOREACH row in errors  %>
+                <li><%  row  %></li>
+            <%  END  %>
+        </ul>
+    </div>
+<%  END  %>
+
+<div id="page">
+  <div id="pageHeader">
+        <span>Demos</span>
+  </div>
+  <br>
+<div class="pageText">
+<p>
+Please read and provide the required information to complete your demo submission. Due to the large amount of demos we receive weekly, we will not be able to give feedback to everyone. Someone from our A&amp;R team will be in touch within 7-14 days, but ONLY if we feel that your demo is of interest to our label.
+</p>
+
+<h3>Before sending your demos, please read this first!</h3>
+<ul>
+<li>Get to know the sound of AcidWorx</li>
+<li><strong>Demos should include minimum 3 tracks</strong>,  we can’t offer a release with only one or two tracks, unless you have already arranged some remixes, if so, then please send them together with your originals</li>
+<li>Dropbox links are the best, WeTransfer is not good, it expires too soon, <strong>NO SOUNDCLOUD or other streaming links</strong> please, we prefer to download the files and go through them properly</li>
+<li>Make sure your demos are properly mixed-down or even mastered, we won’t consider anything that is still unfinished or work in progress</li>
+<li>No WAV files, all demos must be in <strong>320kbps</strong> MP3 format and the tracks must be full-length</li>
+<li>Each track has to be properly named, so we know who the demo is from ! example: DJ Tek – This Is Acid.mp3, NOT demo1.mp3</li>
+</ul>
+</div>
+
+<form method="post" action="/demo">
+<div class="pageContent">
+<fieldset>
+<p class="required">
+  <label>Name: <%session.demo.name%></label>
+  <input type="text" name="name" value="<%session.demo.name%>">
+</p>
+
+<p class="required">
+  <label>Artist Name:</label>
+  <input type="text" name="artist_name" value="<%session.demo.artist_name%>">
+</p>
+
+<p>
+  <label>Country:</label>
+  <select name="country_id">
+  <%FOREACH country IN countries%>
+  <%country.country_code%>
+    <option value="<%country.country_id%>" <%IF country.country_id == session.demo.country_id %>selected<%END%>><%country.country_name%></option>
+  <%END%>
+  </select>
+</p>
+
+<p class="required">
+  <label>Email:</label>
+  <input type="text" name="email" value="<%session.demo.email%>" placeholder="example@example.com">
+</p>
+
+<p>
+  <label>Have you sent this demo to any other labels?</label>
+  <br>
+  <span>
+    <input type="radio" name="sent_to_other" value="1" <%IF session.demo.sent_to_other == 1 %>checked<%END%>>
+    <label for="Yes">Yes</label>
+    <br>
+    <input type="radio" name="sent_to_other" value="0" <%IF session.demo.sent_to_other == 0 %>checked<%END%>>
+    <label for="No">No</label>
+    <br>
+  </span>
+</p>
+
+<p>
+  <label>What other labels have you released on?</label>
+  <input type="text" name="released_on" value="<%session.demo.released_on%>">
+</p>
+
+<p class="required">
+  <label>Link to your demo</label>
+  <input type="text" name="link" id="link" value="<%session.demo.link%>" placeholder="http://">
+</p>
+
+<p>
+  <label>Demo desription:</label>
+  <textarea cols="20" rows="10" name="demo_desc"><%session.demo.demo_desc%></textarea>
+</p>
+
+</fieldset>
+
+</br>
+<button type="submit" value="Submit Demo">Submit Demo</button>
+<br>
+<br>
+</form>
+</div>
+
+
+</div>
+
+</div>

@@ -1,0 +1,303 @@
+
+body {
+	margin: 0;
+	font-family: 'Source Sans Pro', sans-serif;
+	font-size: 20px;
+}
+#acidworxLogo {
+	height: 70px;
+	//display: block;
+}
+#header {
+	background-color: black;
+	width: 100%;
+    height: 70px;
+}
+#footer {
+	height: 10px;
+	width: 100%;
+}
+#pageHeader {
+	height: 50px;
+	background-color: #C0C0C0;
+	text-align: center;
+}
+#pageHeader span {
+	vertical-align: middle;
+	line-height: 50px;
+	font-size: 30px;
+}
+
+.centerContent {
+	width: 70%;
+ 	margin: 0 auto;
+}
+
+.border {
+	border: 1px solid black;
+}
+
+.formItem {
+	display: inline-block;
+	width: 69%;
+    text-align: center;
+    height: 34px;
+}
+.formItemLabel {
+	display: inline-block;
+	width: 29%;
+    height:30px;
+}
+.noPadding {
+	padding: 0;
+}
+.noMargin {
+	margin: 0;
+}
+
+.borderRed input::placeholder {
+  color: red;
+}
+
+input[type="text"] {
+	width: 96%;
+    height: 30px;
+    border: 1px solid #C0C0C0;
+    font-size: 16px;
+    padding-left: 10px;
+    border-radius: 10px;
+}
+
+select {
+	width: 98%;
+    height: 34px;
+    border: 1px solid #C0C0C0;
+    font-size: 16px;
+    padding-left: 10px;
+    border-radius: 10px;
+}
+
+input[type="password"] {
+	width: 96%;
+    height: 30px;
+    border: 1px solid #C0C0C0;
+    font-size: 16px;
+    padding-left: 10px;
+    border-radius: 10px;
+}
+
+input::placeholder {
+  color: #ccc;
+}
+
+
+input[type="submit"] {
+   	width: 99%;
+    height:34px;
+    border: 1px solid #ccc!important;
+    font-size: 24px;
+    border-radius: 10px;
+}
+
+button {
+	width: 99%;
+    height:34px;
+    border: 1px solid #ccc!important;
+    font-size: 24px;
+    border-radius: 10px;
+}
+
+textarea {
+	width: 99%;
+	font-size: 16px;
+	height: 100px;
+}
+
+#server-error {
+	display: none;
+}
+
+.borderRed {
+	border: 1px solid red;
+}
+
+.pageText {
+	padding-left: 20px;
+	padding-right:  20px;
+
+	border 1px solid black;
+}
+
+.pageContent{ 
+	padding-left: 20px;
+	padding-right:  20px;
+}
+
+.redText {
+	color: red;
+}
+
+.widthFull {
+	width: 100%;
+}
+
+.heightFull {
+	height: 100%;
+}
+.widthvw {
+	width: 100vw;
+}
+
+.heightvw {
+	height: 100vh;
+}
+
+.pagePadding {
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+.center,
+.centerTable {
+	text-align: center;
+	margin: 0 auto;
+}
+
+.alignRight {
+	float: right
+}
+
+.width90Percent {
+	width: 90%;
+}
+
+.table {
+	display: table;
+}
+
+.row {
+	display: table-row;
+}
+
+.cell {
+	display: table-cell;
+	//border: 1px solid red;
+}
+
+.tableHeader {
+	display: table-cell;
+	background-color: lightgray;
+	font-weight: bold;
+}
+
+.tableBorder {
+	border: 1px solid lightgray;
+}
+
+.cellBorder {
+	border: 1px solid lightgray;
+}
+
+#profileMenuIcon {
+    border-radius: 50px;
+    padding: 20px;
+    width: 8px;
+    height: 5px;
+    background-image: url(../images/default_profile_icon.png);
+    background-size: 100% 100%;
+    margin-bottom: 12px;
+}
+
+#sideMenuIcon {
+	height: 56px;
+    margin-bottom: 7px;
+    margin-left: -23px;
+}
+
+.profileMenuWidth, 
+.sideMenuIconWidth {
+	width: 10%;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    right: 20px;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.borderBlack {
+	border: 1px solid black;
+}
+
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+.show {display:block;}
+
+
+#sideMenu {
+ width: 200px;
+}
+
+#mainPage {
+	width: calc(100% - 200px);
+}
+
+@media (max-width: 400px)  {
+  	body {
+		margin: 0;
+		font-family: 'Source Sans Pro', sans-serif;
+		font-size: 18px;
+	}
+	button {
+		width: 99%;
+	    height:30px;
+	    font-size: 18px;
+	}
+	.formItem {
+		display: inline-block;
+		width: 59%;
+	    text-align: center;
+	    height: 34px;
+	}
+	.formItemLabel {
+		display: inline-block;
+		width: 39%;
+	    height:30px;
+	}
+	input[type="text"] {
+		width: 96%;
+	    height: 30px;
+	    border: 1px solid #C0C0C0;
+	    font-size: 14px;
+	    padding-left: 10px;
+	}
+
+	#acidworxLogo {
+		height: 50px;
+		margin-left: auto;
+		margin-right: auto;
+		display: block;
+		margin-left: 40px;
+	}
+
+}
+
+}
+
+

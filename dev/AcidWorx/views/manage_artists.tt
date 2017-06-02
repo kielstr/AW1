@@ -1,0 +1,8 @@
+
+<br>
+<div id="page">
+  <div class="pageText  ">
+    <p><a href="/manage_artists/new_requests">New Artist</a></p>
+    <p><a href="/manage_artists/demos">New demos</a></p>
+  </div>
+</div>
