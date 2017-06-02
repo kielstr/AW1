@@ -4,7 +4,7 @@
 # console: log messages to STDOUT (your console where you started the
 #          application server)
 # file:    log message to a file in log/
-logger: "console"
+#logger: "console"
 
 # the log level for this environment
 # core is the lowest, it shows Dancer2's core log messages as well as yours
@@ -27,6 +27,10 @@ engines:
         Storable:
             session_dir: "/tmp/dancer-sessions"
             cookie_duration: 3600    # Default cookie timeout in seconds
+    logger:
+        File:
+            log_dir: "/home/acidworx/logs"
+            file_name: "acidworx.log"
 
 plugins:
     Auth::Extensible:

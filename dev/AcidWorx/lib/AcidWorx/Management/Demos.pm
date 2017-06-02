@@ -8,8 +8,8 @@ use Data::Dumper qw( Dumper );
 
 with 'AcidWorx';
 
-has 'all_demos' => ( 'is' => 'rw', 'isa' => 'ArrayRef' );
-has 'dont_populate' => ( 'is' => 'rw', isa => 'Bool' );
+has 'all_demos' => ( 'is' => 'rw', 'isa' => 'Maybe[ArrayRef]' );
+has 'dont_populate' => ( 'is' => 'rw', 'isa' => 'Bool' );
 
 sub BUILD {
 	my $self = shift;

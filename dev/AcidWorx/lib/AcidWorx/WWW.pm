@@ -395,4 +395,24 @@ get '/demo_thankyou' => sub {
 	template 'demo_thankyou';
 };
 
+get 'manage_release' => require_role Admin => sub {
+
+	template 'manage_release/index';
+
+};
+
+get '/manage_release/show' => require_role Admin => sub {
+
+	template 'manage_release/show';
+
+};
+
+get '/manage_release/add' => require_role Admin => sub {
+
+	template 'manage_release/add';
+
+};
+
+
+
 true;
