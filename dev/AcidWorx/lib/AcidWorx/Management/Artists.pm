@@ -9,6 +9,7 @@ use Data::Dumper qw( Dumper );
 with 'AcidWorx';
 
 has 'new_request' => ( is => 'rw', isa => 'Maybe[ArrayRef]' );
+has 'artists' => ( is => 'rw', isa => 'Maybe[ArrayRef]' );
 
 sub BUILD {
 	my $self = shift;
@@ -50,6 +51,25 @@ sub get_new_request {
 	if ( keys %$new_request ) {
 		$self->new_request( [map { $new_request->{$_} } keys %$new_request] );
 	}
+}
+
+sub get_artists {
+	my $self = shift;
+	
+	$self->artists( undef );
+
+	my $sql =qq~SELECT artist_name FROM artist WHERE signed = 1~;
+	my $artists_aref = $self->dbh->selectall_arrayref( $sql )
+		or confess "Failed to fetch new artist requests: " . $self->dbh->errstr;
+
+	my @artists;
+
+	foreach ( @$artists_aref ) {
+		push @artists, $_->[0];
+	}
+
+	$self->artists( \@artists );
+
 }
 
 1;

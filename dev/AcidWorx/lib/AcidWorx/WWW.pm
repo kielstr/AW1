@@ -63,7 +63,7 @@ post '/manage_artists/demos' => require_role Admin => sub {
 
 				my $msg = $template->fill_in ( HASH => {
 		        	name => $demo->name,
-		        	link => "http://192.168.1.10:5000/new_artist?token=$token",
+		        	link => "http://acidworx.zapto.org:5000/new_artist?token=$token",
 		        });
 
 				email {
@@ -409,7 +409,15 @@ get '/manage_release/show' => require_role Admin => sub {
 
 get '/manage_release/add' => require_role Admin => sub {
 
-	template 'manage_release/add';
+	my $artists_obj = AcidWorx::Management::Artists->new(
+		dbh => database,
+	);
+
+	$artists_obj->get_artists;
+
+	template 'manage_release/add', {
+		artists => $artists_obj->artists,
+	};
 
 };
 

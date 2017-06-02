@@ -6,12 +6,21 @@
 
   <div>
   	<label>Artist</label>
+    <select name="artists">
+    <%FOR artist IN artists%>
+      <option><% artist %></option>
+    <%END%>
+    </select>
+  </div>
+  <br>
+  <div>
+  	<label>Title</label>
   	<input type=text>
   </div>
 
   <div>
-  	<label>Title</label>
-  	<input type=text>
+  	<label>Description</label>
+  	<textarea></textarea>
   </div>
 
   <div>
@@ -48,3 +57,8 @@
 
   </div>
 </div>
+
+
+<pre>
+<% #USE Dumper; Dumper.dump_html({ artists => artists }) %>
+</pre>
