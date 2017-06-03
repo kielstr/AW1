@@ -23,6 +23,22 @@ get '/' => require_login sub {
     template 'index';
 };
 
+get '/manage_artists/edit' => require_role Admin => sub {
+	my $artists_obj = AcidWorx::Management::Artists->new(
+		'dbh' => database,
+	);
+
+	template 'manage_artists/select_artist', {
+		artists => $artists_obj->get_artists,
+	};
+
+};
+
+post '/manage_artists/edit' => require_role Admin => sub {
+
+};
+
+
 
 get '/manage_artists/add' => require_role Admin => sub {
 
@@ -207,6 +223,8 @@ get '/manage_artists/new_requests' => require_login sub {
 	my $artists = AcidWorx::Management::Artists->new(
 		'dbh' => database,
 	);
+
+	$artists->get_new_request;
 
 	template 'manage_artists/new_requests', {
 		new_requests => $artists->new_request,

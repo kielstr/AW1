@@ -13,8 +13,6 @@ has 'artists' => ( is => 'rw', isa => 'Maybe[ArrayRef]' );
 
 sub BUILD {
 	my $self = shift;
-
-	$self->get_new_request();
 }
 
 sub approve_by_token {
