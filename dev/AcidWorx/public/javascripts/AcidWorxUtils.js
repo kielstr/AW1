@@ -18,9 +18,7 @@
             );
 
             $( ".required input[type='text']" ).attr( "style", "border-color: red");
-            $( ".required input" ).attr( "placeholder", "Required");
-
-            placeholder="text"
+            //$( ".required input" ).attr( "placeholder", "Required");
         }
 
         return 1; 

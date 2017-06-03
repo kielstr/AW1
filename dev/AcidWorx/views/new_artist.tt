@@ -14,15 +14,21 @@
         <span>New artist sign up</span>
   </div>
   <br>
+  <%IF admin %>
+  <p class="pageText">
+  Please provide the following information.
+  </p>
+  <%ELSE%>
   <p class="pageText">
   Congratulations on being selected as an AcidWorx artist. 
   <br>
   <br>
   Please provide the following information.
   </p>
+  <%END%>
   <br>
 
-<form method="post" action="new_artist">
+<form method="post" action="<%action%>">
   <div class="centerContent noPadding">
     <div class="">
       <div class="formItemLabel">Artist Name:</div>

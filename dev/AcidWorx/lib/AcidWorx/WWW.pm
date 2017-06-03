@@ -23,6 +23,66 @@ get '/' => require_login sub {
     template 'index';
 };
 
+
+get '/manage_artists/add' => require_role Admin => sub {
+
+	my $artist = AcidWorx::Artist->new(
+		'dbh' => database,
+	);
+
+	$artist->populate_countries;
+
+	my $country_aref = $artist->countries;
+
+	template 'artist', {
+		'countries' => $country_aref,
+		'mode' => 'add',
+		'action' => '/manage_artists/add',
+		'back_url' => '/manage_artists',
+	};
+};
+
+post '/manage_artists/add' => sub {
+	my $params = params;
+	session 'new_artist' => {} unless session( 'new_artist' );
+
+	for my $param ( keys %$params ) {
+		session( 'new_artist' )->{ $param } = $params->{ $param };
+	}
+
+	my $artist = AcidWorx::Artist->new(
+		params,
+		dbh => database,
+	);
+
+	# populate token after creating the object so we don't self populate.
+	#$artist->token( session( 'new_artist' )->{ 'token' } );
+
+	if ( $artist->error ) {
+		my $errors = $artist->errors;
+
+		$artist->populate_countries;
+
+		my $country_aref = $artist->countries;
+
+		template 'artist', {
+			'errors' => "Please enter all the required fields",
+			'countries' => $country_aref,
+			'action' => '/manage_artists/add',
+			'mode' => 'add',
+			'back_url' => '/manage_artists',
+		};
+
+	} else {
+
+		# Must save before sending the cookie so token is defined
+		$artist->save;
+
+		redirect '/manage_artists';
+	}
+	
+};
+
 get '/manage_artists/demos' => require_role Admin => sub {
 	my $demos = AcidWorx::Management::Demos->new(
 		dbh => database,
@@ -197,19 +257,25 @@ get '/new_artist' => sub {
 		);
 
 		if ( $demo->token ) {
-			session 'new_artist' => {
+			session 'artist' => {
 				'name' => $demo->name,
 				'artist_name' => $demo->artist_name,
 				'country_id' => $demo->country_id,
 				'email' => $demo->email,
 				'token' => $demo->token,
+				'action' => '/new_artist',
+				'mode' => 'new_artist',
+				'back_url' => '/new_artist',
 			};
 		}
 	}
 
-	template 'new_artist', {
+	template 'artist', {
 		'artist_details' => $artist_details,
 		'countries' => $country_aref,
+		'action' => '/new_artist',
+		'mode' => 'new_artist',
+		'back_url' => '/new_artist',
 	};
 };
 
@@ -238,9 +304,12 @@ post '/new_artist' => sub {
 
 		my $country_aref = $artist->countries;
 
-		template 'new_artist', {
+		template 'artist', {
 			'errors' => "Please enter all the required fields",
 			'countries' => $country_aref,
+			'action' => '/new_artist',
+			'mode' => 'new_artist',
+			'back_url' => '/new_artist',
 		};
 
 	} else {
