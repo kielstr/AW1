@@ -45,7 +45,7 @@
     <%END%>
 
     <%IF mode == 'new_artist' %>
-        Congratulations on being selected as an AcidWorx artist. 
+        <img id="congratulationsIcon" src="/images/congratulations.png">Congratulations on being selected as an AcidWorx artist. 
         <br>
         Please provide the following information.
     <%END%>
