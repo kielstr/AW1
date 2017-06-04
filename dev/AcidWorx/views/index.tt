@@ -1,8 +1,27 @@
-
-<br>
 <div id="page">
-  <div class="pageText">
-    <p><a href="/manage_artists">Artists Managemet</a></p>
-    <p><a href="/manage_release">Release Managemet</a></p>
-  </div>
+	<div id="pageHeader">
+		<div class="table widthFull">
+			<div class="row">
+				<div class="cell width60px"></div>
+
+	    		<div class="cell">
+	  				<span></span>
+	  			</div>
+
+	  			<div class="cell width60px"></div>
+	  	    </div>
+	    </div>
+	</div>
+
+	<br>
+
+	<fieldset>
+	<legend>Label management</legend>
+	<div id="page">
+	  <div class="pageText">
+	    <p><a href="/manage_artists">Artist Managemet</a></p>
+	    <p><a href="/manage_release">Release Managemet</a></p>
+	  </div>
+	</div>
+	</fieldset>
 </div>

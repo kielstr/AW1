@@ -15,13 +15,59 @@ use AcidWorx::Management::Artists;
 
 use Data::Dumper qw(Dumper);
 
-warn Dumper database;
-
 our $VERSION = '0.1';
 
 get '/' => require_login sub {
     template 'index';
 };
+
+get '/manage_artists/display' => require_role Admin => sub {
+	my $artists_obj = AcidWorx::Management::Artists->new(
+		'dbh' => database,
+	);
+
+	template 'manage_artists/select_artist', {
+		'artists' => $artists_obj->get_artists,
+		'back_url' => '/manage_artists',
+		'action' => '/manage_artists/display',
+	};
+
+};
+
+post '/manage_artists/display' => require_role Admin => sub {
+
+	my $artist_id = param( 'artist' );
+
+	my $artist = AcidWorx::Artist->new(
+		'dbh' => database,
+		'artist_id' => $artist_id,
+	);
+
+	session 'artist' => {
+		'name' => $artist->name,
+		'artist_name' => $artist->artist_name,
+		'address' => $artist->artist_name,
+		'address_line1' => $artist->address_line1,
+		'address_line2' => $artist->address_line2,
+		'address_line3' => $artist->address_line3,
+		'country_id' => $artist->country_id,
+		'email' => $artist->email,
+		'payment_email' => $artist->payment_email,
+		'soundcloud_url' => $artist->soundcloud_url,
+		'ra_url' => $artist->ra_url,
+		'beatport_url' => $artist->beatport_url,
+		'facebook_page' => $artist->facebook_page,
+		'website' => $artist->website,
+		'bio' => $artist->bio,
+		'email_confirmed' => $artist->email_confirmed,
+	};
+
+	template 'manage_artists/display_artist', {
+		back_url => '/manage_artists/display',
+	};
+};
+
+
 
 get '/manage_artists/edit' => require_role Admin => sub {
 	my $artists_obj = AcidWorx::Management::Artists->new(
@@ -31,6 +77,7 @@ get '/manage_artists/edit' => require_role Admin => sub {
 	template 'manage_artists/select_artist', {
 		'artists' => $artists_obj->get_artists,
 		'back_url' => '/manage_artists',
+		'action' => '/manage_artists/edit',
 	};
 
 };
@@ -51,10 +98,9 @@ post '/manage_artists/edit' => require_role Admin => sub {
 		my $country_aref = $artist->countries;
 
 		session 'artist' => {
-			name => $artist->name,
-			artist_name => $artist->artist_name,
-			address => $artist->artist_name,
-
+			'name' => $artist->name,
+			'artist_name' => $artist->artist_name,
+			'address' => $artist->artist_name,
 			'address_line1' => $artist->address_line1,
 			'address_line2' => $artist->address_line2,
 			'address_line3' => $artist->address_line3,
@@ -240,7 +286,9 @@ post '/manage_artists/demos' => require_role Admin => sub {
 
 
 get '/manage_artists' => require_role Admin => sub {
-	template 'manage_artists';
+	template 'manage_artists', {
+		back_url => '/',
+	};
 };
 
 post '/manage_artists/new_requests' => require_role Admin => sub {
@@ -332,7 +380,6 @@ get '/new_artist' => sub {
 	} else {
 		return template 'new_artist_no_token';
 	}
-
 
 	session 'artist' => {} unless session( 'artist' );
 

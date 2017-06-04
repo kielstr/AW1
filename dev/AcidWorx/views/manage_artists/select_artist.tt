@@ -14,10 +14,10 @@
 	  	    </div>
 	    </div>
 	</div>
-</div>
+
 
 <br>
-<form action="/manage_artists/edit" method=post>
+<form action="<%action%>" method=post>
 <fieldset>
 	<legend>Artists</legend>
 	<select id="artists" name="artist">
@@ -35,3 +35,5 @@
 <%USE Dumper; Dumper.dump_html({ artists => artists }) %>
 </pre>
 -->
+
+</div>

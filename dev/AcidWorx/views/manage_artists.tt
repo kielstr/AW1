@@ -1,24 +1,41 @@
 
-<br>
 <div id="page">
-  <div class="pageText  ">
+
+  <div id="pageHeader">
+    <div class="table widthFull">
+      <div class="row">
+        <div class="cell width60px">
+              <a href=<%back_url%>><image id="backImg" src="/images/backIcon.png"></a>
+          </div>
+
+          <div class="cell">
+            <span>Artist management</span>
+          </div>
+
+          <div class="cell width60px"></div>
+          </div>
+      </div>
+  </div>
+
+  <br>
+
   <fieldset>
   <legend>Artists</legend>
-  	<p><a href="/manage_artists/display">Display Artists</a></p>
-
+  	<p><a href="/manage_artists/display">Display Artist</a></p>
   	<p>
-    <!--<img src="/images/newArtist.png" >-->
-    <a href="/manage_artists/add">Add Artist</a></p>
-
+      <!--<img src="/images/newArtist.png" >-->
+      <a href="/manage_artists/add">Add Artist</a>
+    </p>
   	<p><a href="/manage_artists/edit">Edit Artist</a></p>
-
   	<p><a href="/manage_artists/remove">Remove Artist</a></p>
   </fieldset>
-  	<br><br>
-  	<fieldset>
+
+	<br>
+  <br>
+
+  <fieldset>
   	<legend>Requests</legend>
     <p><a href="/manage_artists/new_requests">New Artists Requests</a></p>
     <p><a href="/manage_artists/demos">New demo Requests</a></p>
-    </fieldset>
-  </div>
+  </fieldset>
 </div>
