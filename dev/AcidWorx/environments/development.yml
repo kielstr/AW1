@@ -52,3 +52,8 @@ plugins:
             AutoCommit: 1
         on_connect_do: ["SET NAMES 'utf8'", "SET CHARACTER SET 'utf8'" ]
         log_queries: 1
+    Email:
+        transport:
+          SMTP:
+            host: '192.168.1.10'
+            port: 25

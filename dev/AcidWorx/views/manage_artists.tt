@@ -6,7 +6,9 @@
   <legend>Artists</legend>
   	<p><a href="/manage_artists/display">Display Artists</a></p>
 
-  	<p><a href="/manage_artists/add">Add Artist</a></p>
+  	<p>
+    <!--<img src="/images/newArtist.png" >-->
+    <a href="/manage_artists/add">Add Artist</a></p>
 
   	<p><a href="/manage_artists/edit">Edit Artist</a></p>
 

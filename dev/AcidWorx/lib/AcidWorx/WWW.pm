@@ -29,18 +29,96 @@ get '/manage_artists/edit' => require_role Admin => sub {
 	);
 
 	template 'manage_artists/select_artist', {
-		artists => $artists_obj->get_artists,
+		'artists' => $artists_obj->get_artists,
+		'back_url' => '/manage_artists',
 	};
 
 };
 
 post '/manage_artists/edit' => require_role Admin => sub {
 
+	my $artist_id = param( 'artist' );
+	my $update = param( 'update' );
+
+	if ( $artist_id ) {
+		my $artist = AcidWorx::Artist->new(
+			'dbh' => database,
+			'artist_id' => $artist_id,
+		);
+
+		$artist->populate_countries;
+
+		my $country_aref = $artist->countries;
+
+		session 'artist' => {
+			name => $artist->name,
+			artist_name => $artist->artist_name,
+			address => $artist->artist_name,
+
+			'address_line1' => $artist->address_line1,
+			'address_line2' => $artist->address_line2,
+			'address_line3' => $artist->address_line3,
+			'country_id' => $artist->country_id,
+			'email' => $artist->email,
+			'payment_email' => $artist->payment_email,
+			'soundcloud_url' => $artist->soundcloud_url,
+			'ra_url' => $artist->ra_url,
+			'beatport_url' => $artist->beatport_url,
+			'facebook_page' => $artist->facebook_page,
+			'website' => $artist->website,
+			'bio' => $artist->bio,
+			'email_confirmed' => $artist->email_confirmed,
+		};
+
+
+		return template 'artist', {
+			'countries' => $country_aref,
+			'mode' => 'edit',
+			'action' => '/manage_artists/edit',
+			'back_url' => '/manage_artists/edit',
+		};
+
+	} elsif ( $update ) {
+		my $params = params;
+		session 'artist' => {} unless session( 'artist' );
+
+		for my $param ( keys %$params ) {
+			session( 'artist' )->{ $param } = $params->{ $param };
+		}
+
+		my $artist = AcidWorx::Artist->new(
+			params,
+			dbh => database,
+		);
+
+		# populate token after creating the object so we don't self populate.
+		#$artist->token( session( 'artist' )->{ 'token' } );
+
+		if ( $artist->error ) {
+			my $errors = $artist->errors;
+
+			warn Dumper $errors;
+
+			$artist->populate_countries;
+
+			my $country_aref = $artist->countries;
+
+			template 'artist', {
+				'errors' => "Please enter all the required fields",
+				'countries' => $country_aref,
+				'action' => '/new_artist',
+				'mode' => 'new_artist',
+				'back_url' => '/new_artist',
+			};
+		} else {
+			$artist->save;
+			redirect '/manage_artists';
+		}
+	}
 };
 
-
-
 get '/manage_artists/add' => require_role Admin => sub {
+	session 'artist' => {};
 
 	my $artist = AcidWorx::Artist->new(
 		'dbh' => database,
@@ -60,10 +138,10 @@ get '/manage_artists/add' => require_role Admin => sub {
 
 post '/manage_artists/add' => sub {
 	my $params = params;
-	session 'new_artist' => {} unless session( 'new_artist' );
+	session 'artist' => {} unless session( 'artist' );
 
 	for my $param ( keys %$params ) {
-		session( 'new_artist' )->{ $param } = $params->{ $param };
+		session( 'artist' )->{ $param } = $params->{ $param };
 	}
 
 	my $artist = AcidWorx::Artist->new(
@@ -72,7 +150,7 @@ post '/manage_artists/add' => sub {
 	);
 
 	# populate token after creating the object so we don't self populate.
-	#$artist->token( session( 'new_artist' )->{ 'token' } );
+	#$artist->token( session( 'artist' )->{ 'token' } );
 
 	if ( $artist->error ) {
 		my $errors = $artist->errors;
@@ -256,7 +334,7 @@ get '/new_artist' => sub {
 	}
 
 
-	session 'new_artist' => {} unless session( 'new_artist' );
+	session 'artist' => {} unless session( 'artist' );
 
 	my $artist_details;
 
@@ -281,9 +359,6 @@ get '/new_artist' => sub {
 				'country_id' => $demo->country_id,
 				'email' => $demo->email,
 				'token' => $demo->token,
-				'action' => '/new_artist',
-				'mode' => 'new_artist',
-				'back_url' => '/new_artist',
 			};
 		}
 	}
@@ -299,10 +374,10 @@ get '/new_artist' => sub {
 
 post '/new_artist' => sub {
 	my $params = params;
-	session 'new_artist' => {} unless session( 'new_artist' );
+	session 'artist' => {} unless session( 'artist' );
 
 	for my $param ( keys %$params ) {
-		session( 'new_artist' )->{ $param } = $params->{ $param };
+		session( 'artist' )->{ $param } = $params->{ $param };
 	}
 
 	my $artist = AcidWorx::Artist->new(
@@ -311,7 +386,7 @@ post '/new_artist' => sub {
 	);
 
 	# populate token after creating the object so we don't self populate.
-	#$artist->token( session( 'new_artist' )->{ 'token' } );
+	#$artist->token( session( 'artist' )->{ 'token' } );
 
 	if ( $artist->error ) {
 		my $errors = $artist->errors;
@@ -336,7 +411,7 @@ post '/new_artist' => sub {
 		my $code;
 		$code .= $chars[rand @chars] for 1..18;
 
-		session( 'new_artist' )->{'code'} = $code;
+		session( 'artist' )->{'code'} = $code;
 
 		my $template = Text::Template->new(
 			TYPE => 'FILE',  
@@ -386,7 +461,7 @@ post '/new_artist_confirm_email' => sub {
 				? cookies->{ 'artist' }->value : undef ) 
 	);
 
-	if ( $params->{ 'code' } eq session( 'new_artist' )->{ 'code' } ) {
+	if ( $params->{ 'code' } eq session( 'artist' )->{ 'code' } ) {
 		$artist->email_confirmed(1, 1);
 	
 		template 'new_artist_thankyou';

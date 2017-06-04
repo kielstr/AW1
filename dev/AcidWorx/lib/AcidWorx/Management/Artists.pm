@@ -56,14 +56,17 @@ sub get_artists {
 	
 	$self->artists( undef );
 
-	my $sql =qq~SELECT artist_name FROM artist WHERE signed = 1~;
+	my $sql =qq~SELECT artist_id, artist_name FROM artist WHERE signed = 1~;
 	my $artists_aref = $self->dbh->selectall_arrayref( $sql )
 		or confess "Failed to fetch new artist requests: " . $self->dbh->errstr;
 
 	my @artists;
 
 	foreach ( @$artists_aref ) {
-		push @artists, $_->[0];
+		push @artists, { 
+			id => $_->[0], 
+			name => $_->[1] 
+		};
 	}
 
 	$self->artists( \@artists );

@@ -71,6 +71,8 @@ sub BUILD {
 	
 	if ( $self->token ) {
 		$self->populate_by_token;
+	} elsif ( $self->artist_id ) {
+		$self->populate_by_id;
 	}
 
 	for ( __PACKAGE__->meta->get_all_attributes() ) {
@@ -103,7 +105,7 @@ sub populate_by_token {
 			token,
 			signed,
 			email_confirmed
-		FROM artist WHERE token = ?~;
+		FROM artist WHERE artist_id = ?~;
 	my $artist = $self->dbh->selectrow_hashref( $sql, {}, $self->token )
 		or confess "Failed to fetch new artist request: " . $self->dbh->errstr;
 
@@ -112,6 +114,39 @@ sub populate_by_token {
 	}
 
 }
+
+sub populate_by_id {
+	my $self = shift;
+	my $sql = qq~
+		SELECT
+			artist_id,
+			name,
+			artist_name,
+			address_line1,
+			address_line2,
+			address_line3,
+			country_id,
+			email,
+			payment_email,
+			soundcloud_url,
+			ra_url,
+			beatport_url,
+			facebook_page,
+			website,
+			bio,
+			token,
+			signed,
+			email_confirmed
+		FROM artist WHERE artist_id = ?~;
+	my $artist = $self->dbh->selectrow_hashref( $sql, {}, $self->artist_id )
+		or confess "Failed to fetch new artist request: " . $self->dbh->errstr;
+
+	for my $key ( keys %$artist ) {
+		$self->$key( $artist->{ $key } );
+	}
+
+}
+
 
 sub notnull {
 	my ( $self, $name, $value ) = @_;

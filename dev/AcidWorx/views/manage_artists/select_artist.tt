@@ -1,3 +1,37 @@
 <div id="page">
-  	<div id="pageHeader">Select Artist</div>
+	<div id="pageHeader">
+		<div class="table widthFull">
+			<div class="row">
+				<div class="cell width60px">
+	      			<a href=<%back_url%>><image id="backImg" src="/images/backIcon.png"></a>
+	    		</div>
+
+	    		<div class="cell">
+	  				<span>Select Artist</span>
+	  			</div>
+
+	  			<div class="cell width60px"></div>
+	  	    </div>
+	    </div>
+	</div>
 </div>
+
+<br>
+<form action="/manage_artists/edit" method=post>
+<fieldset>
+	<legend>Artists</legend>
+	<select id="artists" name="artist">
+	<%FOR artist IN artists%>
+		<option value=<%artist.id%>><%artist.name%>
+	<%END%>
+	</select>
+	<br>
+	<br>
+	<button type="submit" value="Next">Next</button>
+</fieldset>
+</form>
+<!--
+<pre>
+<%USE Dumper; Dumper.dump_html({ artists => artists }) %>
+</pre>
+-->

@@ -15,13 +15,15 @@
 <div id="page">
   <div id="pageHeader">
     <%IF mode == 'add'%>
-      <% page_title = 'Add new artist'%>
+      <%page_title = 'Add new artist'%>
+    <%ELSIF mode == 'edit'%>
+    <% page_title = 'Edit artist'%>
     <%ELSE%>
-      <% page_title = 'New artist sign up'%>
+      <%page_title = 'New artist sign up'%>
     <%END%>
     <div class="table widthFull">
       <div class="row">
-        <%IF mode == 'add' %>
+        <%IF mode == 'add' || mode == 'edit'%>
         <div class="cell width60px">
           <a href=<%back_url%>><image id="backImg" src="/images/backIcon.png"></a>
         </div>
@@ -30,9 +32,7 @@
           <span><%page_title%></span>
         </div>
 
-        <div class="cell width60px">
-          
-        </div>
+        <div class="cell width60px"></div>
 
       </div>
     </div>
@@ -57,27 +57,27 @@
     <form id="artistForm" method="post" action="<%action%>" novalidate="novalidate">
       <br>
       <div class="required">
-        <input id="artistName" name="artist_name" type="text" value="<% session.new_artist.artist_name %>" required>
+        <input id="artistName" name="artist_name" type="text" value="<% session.artist.artist_name %>" required>
         <label for="artistName">Name</label>
       </div>
       <br>
       <div class="required">
-        <input id="name" type="text" name="name" value="<% session.new_artist.name %>" required>
+        <input id="name" type="text" name="name" value="<% session.artist.name %>" required>
         <label for="name">Real Name</label>
       </div>
       <br>
       <div>
-        <input id="addressOne" type="text" name="address_line1" value="<% session.new_artist.address_line1 %>" required>
+        <input id="addressOne" type="text" name="address_line1" value="<% session.artist.address_line1 %>" required>
         <label for="addressOne" >Address line 1</label>
       </div>
       <br>
       <div>
-        <input id="addressTwo" type="text" name="address_line2" value="<% session.new_artist.address_line2 %>" required>
+        <input id="addressTwo" type="text" name="address_line2" value="<% session.artist.address_line2 %>" required>
         <label for="addressTwo" >Address line 2</label>
       </div>
       <br>
       <div>
-        <input id="addressThree" type="text" name="address_line3" value="<% session.new_artist.address_line3 %>" required>
+        <input id="addressThree" type="text" name="address_line3" value="<% session.artist.address_line3 %>" required>
         <label for="addressThree" >Address Line 3</label>
       </div>
       <div>
@@ -86,55 +86,58 @@
         <select name="country_id">
           <%FOREACH country IN countries%>
           <%country.country_code%>
-            <option value="<%country.country_id%>" <%IF country.country_id == session.new_artist.country_id %>selected<%END%>><%country.country_name%></option>
+            <option value="<%country.country_id%>" <%IF country.country_id == session.artist.country_id %>selected<%END%>><%country.country_name%></option>
           <%END%>
         </select>
       </div>
 
       <br>
       <div class="required">
-        <input id="email" type="text" name="email" value="<% session.new_artist.email %>" required>
+        <input id="email" type="text" name="email" value="<% session.artist.email %>" required>
         <label for="email">Email</label>
       </div>
       <br>
       <div class="required">
-        <input id="paymentEmail" type="text" name="payment_email" value="<% session.new_artist.payment_email %>" required>
+        <input id="paymentEmail" type="text" name="payment_email" value="<% session.artist.payment_email %>" required>
         <label for="paymentEmail">Payment Email</label>
       </div>
       <br>
       <div>
-        <input id="soundcloudPage" type="text" name="soundcloud_url" value="<% session.new_artist.soundcloud_url %>" required>
+        <input id="soundcloudPage" type="text" name="soundcloud_url" value="<% session.artist.soundcloud_url %>" required>
         <label for="soundcloudPage">Soundcloud page</label>
       </div>
       <br>
       <div>
-        <input id="raPage" type="text" name="ra_url" value="<% session.new_artist.ra_url %>" required>
+        <input id="raPage" type="text" name="ra_url" value="<% session.artist.ra_url %>" required>
         <label for="raPage">RA Page:</label>
       </div>
       <br>
       <div>
-        <input id="beatportPage" type="text" name="beatport_url" value="<% session.new_artist.beatport_url %>" required>
+        <input id="beatportPage" type="text" name="beatport_url" value="<% session.artist.beatport_url %>" required>
         <label for="beatportPage" >Beatport page</label>
       </div>
       <br>
       <div>
-        <input id="facebookPage" type="text" name="facebook_page" value="<% session.new_artist.facebook_page %>" required>
+        <input id="facebookPage" type="text" name="facebook_page" value="<% session.artist.facebook_page %>" required>
         <label for="facebookPage" >Facebook page</label>
       </div>
       <br>
       <div>
-        <input id="website" type="text" name="website" value="<% session.new_artist.website %>" required>
+        <input id="website" type="text" name="website" value="<% session.artist.website %>" required>
         <label for="website">Artist website</label>
       </div>
       <br>
       <div>
-        <textarea id="bio" name="bio" required ><% session.new_artist.bio %></textarea>
+        <textarea id="bio" name="bio" required ><% session.artist.bio %></textarea>
         <label for="bio" >Bio</label>
       </div>
       <br>
       <div>
         <%IF mode == 'add'%>
           <%button_text = 'Add' %>
+        <%ELSIF mode == 'edit'%>
+          <input type=hidden name="update" value="1">
+          <%button_text = 'Update' %>
         <%ELSE%>
           <%button_text = 'Sign up' %>
         <%END%>
@@ -144,5 +147,8 @@
   </div>
 </div>
 
-
-<%#USE Dumper; Dumper.dump_html({ session => session }) %>
+<!--
+<pre>
+<%USE Dumper; Dumper.dump_html({ session => session }) %>
+</pre>
+-->
