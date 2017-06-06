@@ -1,10 +1,12 @@
 package AcidWorx::WWW;
 
+use v5.20;
+
 use Dancer2;
 use Dancer2::Plugin::Database;
 use Dancer2::Plugin::Email;
 use Dancer2::Plugin::Auth::Extensible;
-use v5.20;
+
 use Text::Template;
 use FindBin qw( $RealBin );
 
@@ -18,7 +20,9 @@ use Data::Dumper qw(Dumper);
 our $VERSION = '0.1';
 
 get '/' => require_login sub {
-    template 'index';
+    template 'index', {
+    	'page_title' => 'Management',
+    };
 };
 
 get '/manage_artists/display' => require_role Admin => sub {
@@ -27,6 +31,7 @@ get '/manage_artists/display' => require_role Admin => sub {
 	);
 
 	template 'manage_artists/select_artist', {
+		'page_title' => 'Display Artist',
 		'artists' => $artists_obj->get_artists,
 		'back_url' => '/manage_artists',
 		'action' => '/manage_artists/display',
@@ -63,11 +68,10 @@ post '/manage_artists/display' => require_role Admin => sub {
 	};
 
 	template 'manage_artists/display_artist', {
-		back_url => '/manage_artists/display',
+		'back_url' => '/manage_artists/display',
+		'page_title' => 'Display Artist',
 	};
 };
-
-
 
 get '/manage_artists/edit' => require_role Admin => sub {
 	my $artists_obj = AcidWorx::Management::Artists->new(
@@ -75,6 +79,7 @@ get '/manage_artists/edit' => require_role Admin => sub {
 	);
 
 	template 'manage_artists/select_artist', {
+		'page_title' => 'Edit Artist',
 		'artists' => $artists_obj->get_artists,
 		'back_url' => '/manage_artists',
 		'action' => '/manage_artists/edit',
@@ -116,8 +121,8 @@ post '/manage_artists/edit' => require_role Admin => sub {
 			'email_confirmed' => $artist->email_confirmed,
 		};
 
-
 		return template 'artist', {
+			'page_title' => 'Edit Artist',
 			'countries' => $country_aref,
 			'mode' => 'edit',
 			'action' => '/manage_artists/edit',
@@ -150,6 +155,7 @@ post '/manage_artists/edit' => require_role Admin => sub {
 			my $country_aref = $artist->countries;
 
 			template 'artist', {
+				'page_title' => 'Edit artist',
 				'errors' => "Please enter all the required fields",
 				'countries' => $country_aref,
 				'action' => '/new_artist',
@@ -175,6 +181,7 @@ get '/manage_artists/add' => require_role Admin => sub {
 	my $country_aref = $artist->countries;
 
 	template 'artist', {
+		'page_title' => 'Add Artist',
 		'countries' => $country_aref,
 		'mode' => 'add',
 		'action' => '/manage_artists/add',
@@ -195,9 +202,6 @@ post '/manage_artists/add' => sub {
 		dbh => database,
 	);
 
-	# populate token after creating the object so we don't self populate.
-	#$artist->token( session( 'artist' )->{ 'token' } );
-
 	if ( $artist->error ) {
 		my $errors = $artist->errors;
 
@@ -206,6 +210,7 @@ post '/manage_artists/add' => sub {
 		my $country_aref = $artist->countries;
 
 		template 'artist', {
+			'page_title' => 'Add Artist',
 			'errors' => "Please enter all the required fields",
 			'countries' => $country_aref,
 			'action' => '/manage_artists/add',
@@ -215,7 +220,6 @@ post '/manage_artists/add' => sub {
 
 	} else {
 
-		# Must save before sending the cookie so token is defined
 		$artist->save;
 
 		redirect '/manage_artists';
@@ -229,6 +233,8 @@ get '/manage_artists/demos' => require_role Admin => sub {
 	);
 
 	template 'manage_artists/demos', {
+		'page_title' => 'Manage Demos',
+		'back_url' => '/manage_artists',
 		demos => $demos->all_demos,
 	}
 };
@@ -262,15 +268,15 @@ post '/manage_artists/demos' => require_role Admin => sub {
 				);
 
 				my $msg = $template->fill_in ( HASH => {
-		        	name => $demo->name,
-		        	link => "http://acidworx.zapto.org:5000/new_artist?token=$token",
+		        	'name' => $demo->name,
+		        	'link' => "http://acidworx.zapto.org/new_artist?token=$token",
 		        });
 
 				email {
-		            from    => 'no-reply@acidworx.com',
-		            to      => $demo->email,
-		            subject => 'Demo to AcidWorx',
-					body    => $msg,
+		            'from'    => 'no-reply@acidworx.com',
+		            'to'      => $demo->email,
+		            'subject' => 'Demo to AcidWorx',
+					'body'    => $msg,
 		            #attach  => '/path/to/attachment',
 		        };
 			}
@@ -280,14 +286,16 @@ post '/manage_artists/demos' => require_role Admin => sub {
 	$demos->populate;
 
 	template 'manage_artists/demos', {
-		demos => $demos->all_demos,
+		'page_title' => 'Manage Demos',
+		'back_url' => '/manage_artists',
+		'demos' => $demos->all_demos,
 	}
 };
 
-
 get '/manage_artists' => require_role Admin => sub {
 	template 'manage_artists', {
-		back_url => '/',
+		'page_title' => 'Manage Artists',
+		'back_url' => '/',
 	};
 };
 
@@ -317,22 +325,20 @@ post '/manage_artists/new_requests' => require_role Admin => sub {
 
 			$artists->approve_by_token( $token );
 
-			warn "\ntoken: " . Dumper( $token ) . "\n";
-
 			my $artist = AcidWorx::Artist->new (
 				'token' => $token,
 				'dbh' => database,
 			);
 
 			my $msg = $template->fill_in( HASH => {
-        		name => $artist->name,
+        		'name' => $artist->name,
         	});
 
 			email {
-	            from    => 'no-reply@acidworx.com',
-	            to      => $artist->email,
-	            subject => 'Welcome to AcidWorx',
-	            body    => $msg,
+	            'from'    => 'no-reply@acidworx.com',
+	            'to'      => $artist->email,
+	            'subject' => 'Welcome to AcidWorx',
+	            'body'    => $msg,
 	            #attach  => '/path/to/attachment',
 	        };
 		}
@@ -341,7 +347,9 @@ post '/manage_artists/new_requests' => require_role Admin => sub {
 	}
 
 	template 'manage_artists/new_requests', {
-		new_requests => $artists->new_request,
+		'page_title' => 'Manage Artists',
+		'back_url' => '/manage_artists',
+		'new_requests' => $artists->new_request,
 	};
 };
 
@@ -353,7 +361,9 @@ get '/manage_artists/new_requests' => require_login sub {
 	$artists->get_new_request;
 
 	template 'manage_artists/new_requests', {
-		new_requests => $artists->new_request,
+		'back_url' => '/manage_artists',
+		'page_title' => 'New Artist Requests',
+		'new_requests' => $artists->new_request,
 	};
 };
 
@@ -378,7 +388,9 @@ get '/new_artist' => sub {
 		}
 
 	} else {
-		return template 'new_artist_no_token';
+		return template 'new_artist_no_token', {
+			'page_title' => 'Sign Up',
+		};
 	}
 
 	session 'artist' => {} unless session( 'artist' );
@@ -411,11 +423,11 @@ get '/new_artist' => sub {
 	}
 
 	template 'artist', {
+		'page_title' => 'Sign Up',
 		'artist_details' => $artist_details,
 		'countries' => $country_aref,
 		'action' => '/new_artist',
 		'mode' => 'new_artist',
-		'back_url' => '/new_artist',
 	};
 };
 
@@ -432,24 +444,19 @@ post '/new_artist' => sub {
 		dbh => database,
 	);
 
-	# populate token after creating the object so we don't self populate.
-	#$artist->token( session( 'artist' )->{ 'token' } );
-
 	if ( $artist->error ) {
 		my $errors = $artist->errors;
-
-		warn Dumper $errors;
 
 		$artist->populate_countries;
 
 		my $country_aref = $artist->countries;
 
 		template 'artist', {
+			'page_title' => 'Sign Up',
 			'errors' => "Please enter all the required fields",
 			'countries' => $country_aref,
 			'action' => '/new_artist',
 			'mode' => 'new_artist',
-			'back_url' => '/new_artist',
 		};
 
 	} else {
@@ -478,7 +485,6 @@ post '/new_artist' => sub {
 			#attach  => '/path/to/attachment',
 		};
 
-		# Must save before sending the cookie so token is defined
 		$artist->save;
 
 		cookie(
@@ -487,19 +493,17 @@ post '/new_artist' => sub {
 			'expires' => '-1'
 		);
 
-		#redirect '/new_artist_thankyou';
 		redirect '/new_artist_confirm_email';
 	}
-	
 };
 
 get '/new_artist_confirm_email' => sub {
-	template 'new_artist_confirm_email';
-
+	template 'new_artist_confirm_email', {
+		'page_title' => 'Confirm Email',
+	};
 };
 
 post '/new_artist_confirm_email' => sub {
-
 	my $params = params;
 
 	my $artist = AcidWorx::Artist->new(
@@ -511,16 +515,21 @@ post '/new_artist_confirm_email' => sub {
 	if ( $params->{ 'code' } eq session( 'artist' )->{ 'code' } ) {
 		$artist->email_confirmed(1, 1);
 	
-		template 'new_artist_thankyou';
+		template 'new_artist_thankyou', {
+			'page_title' => 'Thank You',
+		};
 	} else {
 		template 'new_artist_confirm_email', {
+			'page_title' => 'Confirm Email',
 			'errors' => ["Invalid code"],
 		};
 	}
 };
 
 get '/new_artist_thankyou' => sub {
-	template 'new_artist_thankyou';	
+	template 'new_artist_thankyou', {
+		'page_title' => 'Thank You',
+	};	
 };
 
 get '/demo' => sub {
@@ -549,6 +558,7 @@ get '/demo' => sub {
 	my $country_aref = $demo->countries;
 
 	template 'demo', {
+		'page_title' => 'Send Demo',
 		'countries' => $country_aref,
 	};	
 };
@@ -566,8 +576,6 @@ post '/demo' => sub {
 
 	my $template_data = session( 'demo' );
 
-	warn "\n\n**** Session Demo -- \n" . ( Dumper session( 'demo' ) ) . "****\n\n\n";
-
 	my $demo = AcidWorx::Demo->new (
 		'dbh' => database,
 		params,
@@ -581,6 +589,7 @@ post '/demo' => sub {
 		my $country_aref = $demo->countries;
 
 		template 'demo', {
+			'page_title' => 'Send Demo',
 			'errors' => "Please enter all the required fields",
 			'countries' => $country_aref,
 		};
@@ -595,25 +604,26 @@ post '/demo' => sub {
 		);
 
 		redirect '/demo_thankyou';
-		
 	}
-
 };
 
 get '/demo_thankyou' => sub {
-	template 'demo_thankyou';
+	template 'demo_thankyou', {
+		'page_title' => 'Thank You',
+	};
 };
 
 get 'manage_release' => require_role Admin => sub {
 
-	template 'manage_release/index';
-
+	template 'manage_release/index', {
+		'page_title' => 'Manage Releases',
+	};
 };
 
 get '/manage_release/show' => require_role Admin => sub {
-
-	template 'manage_release/show';
-
+	template 'manage_release/show', {
+		'page_title' => 'Show Release',
+	};
 };
 
 get '/manage_release/add' => require_role Admin => sub {
@@ -625,11 +635,10 @@ get '/manage_release/add' => require_role Admin => sub {
 	$artists_obj->get_artists;
 
 	template 'manage_release/add', {
-		artists => $artists_obj->artists,
+		'page_title' => 'Add Release',
+		'artists' => $artists_obj->artists,
 	};
 
 };
-
-
 
 true;

@@ -1,22 +1,4 @@
-<div id="page">
-	<div id="pageHeader">
-		<div class="table widthFull">
-			<div class="row">
-				<div class="cell width60px">
-	      			<a href=<%back_url%>><image id="backImg" src="/images/backIcon.png"></a>
-	    		</div>
 
-	    		<div class="cell">
-	  				<span>Select Artist</span>
-	  			</div>
-
-	  			<div class="cell width60px"></div>
-	  	    </div>
-	    </div>
-	</div>
-
-
-<br>
 <form action="<%action%>" method=post>
 <fieldset>
 	<legend>Artists</legend>
@@ -35,5 +17,3 @@
 <%USE Dumper; Dumper.dump_html({ artists => artists }) %>
 </pre>
 -->
-
-</div>

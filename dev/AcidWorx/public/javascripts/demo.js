@@ -8,4 +8,12 @@ $(function() {
 		}
 	});
 
+	$("#email").change(function(){
+		if ($("#email").validateEmail()) {
+			console.log('valid email');
+		} else {
+			console.log('invalid email');
+		}
+	})
+
 });

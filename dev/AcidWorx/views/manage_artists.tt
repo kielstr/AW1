@@ -1,41 +1,63 @@
 
-<div id="page">
 
-  <div id="pageHeader">
-    <div class="table widthFull">
-      <div class="row">
-        <div class="cell width60px">
-              <a href=<%back_url%>><image id="backImg" src="/images/backIcon.png"></a>
-          </div>
-
-          <div class="cell">
-            <span>Artist management</span>
-          </div>
-
-          <div class="cell width60px"></div>
-          </div>
+<fieldset>
+  <legend>Artist Management</legend>
+  <br>
+  <div>
+    <div class="table widthFull heightFull">
+    <div class="row">
+        <div class="cell center cellValignCenter width50percent"><img src="/images/icons/
+displayUserIcon.png"></div>
+        <div class="cell cellValignCenter width50percent">
+          <a href="/manage_artists/display">Display Artist</a>
+        </div>
       </div>
+      <br>
+      <div class="row">
+        <div class="cell center cellValignCenter width50percent"><img src="/images/icons/addUserIcon.png"></div>
+        <div class="cell cellValignCenter width50percent">
+          <a href="/manage_artists/add">Add Artist</a>
+        </div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="cell center cellValignCenter width50percent"><img src="/images/icons/editUserIcon.png"></div>
+        <div class="cell cellValignCenter width50percent"><a href="/manage_artists/edit">Edit Artist</a></div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="cell center cellValignCenter width50percent"><img src="/images/icons/displayAllUsers.png"></div>
+        <div class="cell cellValignCenter width50percent"><a href="/manage_artists/all_artists">All Artists</a></div>
+      </div>
+      <br>
+    </div>
   </div>
-
   <br>
 
-  <fieldset>
-  <legend>Artists</legend>
-  	<p><a href="/manage_artists/display">Display Artist</a></p>
-  	<p>
-      <!--<img src="/images/newArtist.png" >-->
-      <a href="/manage_artists/add">Add Artist</a>
-    </p>
-  	<p><a href="/manage_artists/edit">Edit Artist</a></p>
-  	<p><a href="/manage_artists/remove">Remove Artist</a></p>
-  </fieldset>
+</fieldset>
 
-	<br>
+<br>
+<br>
+
+<fieldset>
+  <legend>New Requests</legend>
+  <br>
+  <div>
+    <div class="table widthFull heightFull">
+      <div class="row">
+        <div class="cell center cellValignCenter width50percent"><img src="/images/icons/artistManagementIcon.png"></div>
+        <div class="cell cellValignCenter width50percent"><a href="/manage_artists/new_requests">New Artists Requests</a></div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="cell center cellValignCenter width50percent"><img src="/images/icons/demoManagementIcon.png"></div>
+        <div class="cell cellValignCenter width50percent"><a href="/manage_artists/demos">New demo Requests</a></div>
+      </div>
+      <br>
+    </div>
+  </div>
   <br>
 
-  <fieldset>
-  	<legend>Requests</legend>
-    <p><a href="/manage_artists/new_requests">New Artists Requests</a></p>
-    <p><a href="/manage_artists/demos">New demo Requests</a></p>
-  </fieldset>
-</div>
+</fieldset>
+
+

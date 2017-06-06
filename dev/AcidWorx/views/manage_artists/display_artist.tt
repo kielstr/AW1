@@ -1,26 +1,11 @@
-<div id="page">
-	<div id="pageHeader">
-		<div class="table widthFull">
-			<div class="row">
-				<div class="cell width60px">
-	      			<a href=<%back_url%>><image id="backImg" src="/images/backIcon.png"></a>
-	    		</div>
+<fieldset>
 
-	    		<div class="cell">
-	  				<span>Display Artist</span>
-	  			</div>
-
-	  			<div class="cell width60px"></div>
-	  	    </div>
-	    </div>
-	</div>
-
+	<div><b>Name:</b><br>
+	<%session.artist.name%></div>
 	<br>
-
-	<fieldset>
-	<div><b>Name:</b> <%session.artist.name%></div>
+	<div><b>Artist Name:</b>
 	<br>
-	<div><b>Artist Name:</b> <%session.artist.artist_name%></div>
+	<%session.artist.artist_name%></div>
 	<br>
 	<div><b>Address:</b> 
 	<br>
@@ -31,23 +16,40 @@
 	<%session.artist.address_line3%>
 	</div>
 	<br>
-	<div><b>Country:</b> <%session.artist.country_id%></div>
+	<div><b>Country:</b>
 	<br>
-	<div><b>Email:</b> <%session.artist.email%></div>
+	<%session.artist.country_id%></div>
 	<br>
-	<div><b>Payment Email:</b> <%session.artist.payment_email%></div>
+	<div><b>Email:</b>
 	<br>
-	<div><b>Soundcloud page:</b> <%session.artist.soundcloud_url%></div>
+	<%session.artist.email%></div>
 	<br>
-	<div><b>RA page:</b> <%session.artist.ra_url%></div>
+	<div><b>Payment Email:</b>
 	<br>
-	<div><b>Beatport page:</b> <%session.artist.beatport_url%></div>
+	<%session.artist.payment_email%></div>
 	<br>
-	<div><b>Website:</b> <%session.artist.website%></div>
+	<div><b>Soundcloud page:</b>
 	<br>
-	<div><b>Bio:</b><p><%session.artist.bio%></p></div>
-	</fieldset>
-</div>
+	<%session.artist.soundcloud_url%></div>
+	<br>
+	<div><b>RA page:</b>
+	<br>
+	<%session.artist.ra_url%></div>
+	<br>
+	<div><b>Beatport page:</b>
+	<br>
+	<%session.artist.beatport_url%></div>
+	<br>
+	<div><b>Website:</b>
+	<br>
+	<%session.artist.website%></div>
+	<br>
+	<div><b>Bio:</b><p class="widthFull">
+	<br>
+	<%session.artist.bio%></p></div>
+
+</fieldset>
+
 <!--
 <pre>
 <%USE Dumper; Dumper.dump_html({ session => session }) %>

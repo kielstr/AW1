@@ -1,18 +1,13 @@
+/* page structure */
 
 body {
 	margin: 0;
 	font-family: 'Source Sans Pro', sans-serif;
-	font-size: 20px;
+	font-size: 16px;
 	color: #444444;
+	background-color: #FFFFFF;
 }
-#acidworxLogo {
-	height: 50px;
-	margin-left: auto;
-	margin-right: auto;
-	display: block;
-	position: relative;
-	bottom: 5px;
-}
+
 #header {
 	background-color: black;
 	width: 100%;
@@ -23,34 +18,61 @@ body {
     z-index: 100;
 }
 
+#pageHeader,
+#subHeader {
+	height: 40px;
+	background-color: #d6d6d5;
+	text-align: center;
+}
+
 #headerPad {
 	width: 100%;
     height: 70px;
-    //display: none;
 }
-.headerFixed {
-	position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 100;
-}
-
 
 #footer {
 	height: 10px;
 	width: 100%;
 }
-#pageHeader {
+
+/* header content */
+
+#acidworxLogo {
 	height: 50px;
-	background-color: #f3f3f3;
-	text-align: center;
 }
-#pageHeader span {
-	vertical-align: middle;
-	line-height: 50px;
-	font-size: 26px;
-	color: #444444;
+
+#profileMenuIcon {
+    border-radius: 100px;
+    padding: 25px;
+    background-image: url(../images/default_profile_icon.png);
+    background-size: 100% 100%;
 }
+
+.profileMenuWidth, 
+.sideMenuIconWidth {
+	width: 50px;
+	padding-right: 10px;
+}
+
+#sideMenuIcon {
+    height: 56px;
+}
+
+/* sub header content */
+
+
+.subHeaderText,
+.pageHeaderText {
+	font-size: 18px;
+	font-weight: bold;
+}
+
+#backImg {
+	height: 30px;
+}
+
+
+/* page formating */
 
 fieldset {
 	border: 1px solid #ccc;
@@ -62,26 +84,14 @@ fieldset legend {
 	color: #444444;
 }
 
-.centerContent {
-	width: 70%;
- 	margin: 0 auto;
+.cellValignCenter {
+	vertical-align: middle;
 }
 
 .border {
 	border: 1px solid black;
 }
 
-.formItem {
-	display: inline-block;
-	width: 69%;
-    text-align: center;
-    height: 34px;
-}
-.formItemLabel {
-	display: inline-block;
-	width: 29%;
-    height:30px;
-}
 .noPadding {
 	padding: 0;
 }
@@ -98,7 +108,7 @@ input[type="text"] {
     height: 30px;
     border: 1px solid #C0C0C0;
     font-size: 16px;
-    padding-left: 10px;
+    //padding-left: 10px;
     border-radius: 10px;
 }
 
@@ -120,26 +130,14 @@ input[type="password"] {
     border-radius: 10px;
 }
 
-input::placeholder {
-  color: #ccc;
-}
-
-
-input[type="submit"] {
-   	width: 99%;
-    height:34px;
-    border: 1px solid #ccc!important;
-    font-size: 24px;
-    border-radius: 10px;
-}
 
 button {
-	width: 100%;
+	width: 98%;
     height:34px;
     border: 1px solid #ccc!important;
     font-size: 24px;
     border-radius: 10px;
-    background-color: #d8d4d4;
+    background-color: #d6d6d5;
     color: #444444;
 }
 
@@ -157,20 +155,11 @@ textarea {
 	display: none;
 }
 
-.borderRed {
-	border: 1px solid red;
-}
-
 .pageText {
 	padding-left: 20px;
 	padding-right:  20px;
 
 	border 1px solid black;
-}
-
-.pageContent{ 
-	padding-left: 20px;
-	padding-right:  20px;
 }
 
 .redText {
@@ -181,9 +170,14 @@ textarea {
 	width: 100%;
 }
 
+.width50percent {
+	width: 50%;
+}
+
 .heightFull {
 	height: 100%;
 }
+
 .widthvw {
 	width: 100vw;
 }
@@ -196,15 +190,40 @@ textarea {
 	height: 100vh;
 }
 
+.pad20px,
 .pagePadding {
 	padding-left: 20px;
 	padding-right: 20px;
+}
+
+.padLeft10 {
+	padding-left: 10px;
+}
+
+.padRight10 {
+	padding-right: 10px;
 }
 
 .center,
 .centerTable {
 	text-align: center;
 	margin: 0 auto;
+}
+
+.align-center {
+    display: block;
+    margin: 1.0em auto;
+    text-align: center;
+}
+
+.textAlignRight {
+	text-align: right;
+}
+.textAlignCenter {
+	text-align: center;
+}
+.textAlignLeft {
+	text-align: left;
 }
 
 .alignRight {
@@ -225,7 +244,6 @@ textarea {
 
 .cell {
 	display: table-cell;
-	//border: 1px solid red;
 }
 
 .tableHeader {
@@ -240,33 +258,6 @@ textarea {
 
 .cellBorder {
 	border: 1px solid lightgray;
-}
-
-#profileMenuIcon {
-    border-radius: 100px;
-    padding: 20px;
-    width: 8px;
-    height: 5px;
-    background-image: url(../images/default_profile_icon.png);
-    background-size: 100% 100%;
-    margin-bottom: 12px;
-    position: relative;
-    right:5px;
-    top:6px;
-}
-
-#sideMenuIcon {
-	height: 56px;
-    margin-bottom: 7px;
-    margin-left: -23px;
-    position: relative;
-    left:10px;
-    top: 6px;
-}
-
-.profileMenuWidth, 
-.sideMenuIconWidth {
-	width: 60px;
 }
 
 .dropdown {
@@ -297,26 +288,7 @@ textarea {
 
 .dropdown-content a:hover {background-color: #f1f1f1}
 
-.show {display:block;}
-
-
-#sideMenu {
- width: 200px;
-}
-
-#mainPage {
-	width: calc(100% - 200px);
-}
-
-#backImg {
-	height: 30px;
-	position: relative;
-    margin: auto;
-    top: 9px;
-    left: 0;
-    right: 0;
-    bottom: 0;
-}
+/* Floating labels for inputs */
 
 form > div {
   position: relative;
@@ -341,7 +313,7 @@ form > div > input {
 	font-size: 14px;
 }
 form > div > select {
-	width: 100%;
+	width: 99%;
 }
 form > div > input {
 	padding-left: 5px;
@@ -350,7 +322,7 @@ form > div > input {
 
 form > div > textarea {
 	height: 100px;
-	width: 99%;
+	width: 98%;
 	border: 1px solid #ccc;
 }
 
@@ -378,12 +350,23 @@ form > div > input:valid {
 	color: #ccc;
 	top: -5px;
 }
+.fontColor {
+	color: #424f63;;
+}
+
+#otherLabels {
+	font-size: 14px;
+	color: #ccc;
+	top: -5px;
+}
 
 
 @media (max-width: 400px)  {
 
 	fieldset {
 		width: calc(100% - 40px);
+		//padding: 1px;
+		font-size: 16px;
 	}
 
   	body {
@@ -410,11 +393,6 @@ form > div > input:valid {
 
 	#acidworxLogo {
 		height: 50px;
-		margin-left: auto;
-		margin-right: auto;
-		display: block;
-		position: relative;
-		bottom: 5px;
 	}
 
 }
