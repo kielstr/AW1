@@ -122,11 +122,10 @@ select {
 }
 
 input[type="password"] {
-	width: 96%;
+	width: 98%;
     height: 30px;
     border: 1px solid #C0C0C0;
     font-size: 16px;
-    padding-left: 10px;
     border-radius: 10px;
 }
 
@@ -157,9 +156,7 @@ textarea {
 
 .pageText {
 	padding-left: 20px;
-	padding-right:  20px;
-
-	border 1px solid black;
+	padding-right: 20px;
 }
 
 .redText {
@@ -359,6 +356,12 @@ form > div > input:valid {
 	color: #ccc;
 	top: -5px;
 }
+
+
+#passwordRest {
+	display: none;
+}
+
 
 
 @media (max-width: 400px)  {

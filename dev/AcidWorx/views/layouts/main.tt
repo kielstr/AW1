@@ -55,7 +55,7 @@
 				<div id="profileDropDown" class="dropdown-content">
 				    <a href="#">Edit Profile</a>
 				    <a href="#">Change Password</a>
-				    <a href="#">Log Out</a>
+				    <a href="/logout">Log Out</a>
 			  	</div>
 			</div>
 			<%END%>
@@ -91,6 +91,9 @@
 </pre>
 <%END%>
 
+<pre>
+<% USE Dumper; Dumper.dump_html({ session => session }) %>
+</pre>
 
 </body>
 </html>
