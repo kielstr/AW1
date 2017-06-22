@@ -28,4 +28,23 @@ sub populate_countries {
 
 }
 
+sub all_users {
+	my $self = shift;
+	my $dbh = $self->dbh;
+	my $sql = qq~
+		SELECT id, username FROM users
+	~;
+
+	my $users_hashref = $self->dbh->selectall_hashref( $sql, 'id' )
+		or confess "Failed to fetch all users from users" . $dbh->errstr;
+
+
+	return [ 
+		map {$users_hashref->{$_} } 
+			sort { $users_hashref->{$a}{ 'username' } cmp $users_hashref->{$b}{ 'username' } } 
+				keys %{ $users_hashref } 
+	];
+
+}
+
 1;

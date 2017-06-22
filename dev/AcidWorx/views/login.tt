@@ -1,5 +1,7 @@
 <script type="text/javascript" src="/javascripts/AcidWorxLogin.js"></script>
 
+  <fieldset>
+
 <% IF new_password %>
 
   <h1>New password</h1>
@@ -25,6 +27,7 @@
 
     <% ELSE %>
 
+
     <div id="login">
 
       <h1>Login Required</h1>
@@ -35,7 +38,7 @@
         <p>LOGIN FAILED</p>
       <% END %>
 
-      <form method="post">
+      <form method="post" action="/login">
       <label for="username">Username:</label>
       <input type="text" name="username" id="username">
       <br />
@@ -49,7 +52,7 @@
       <input type="submit" value="Login">
     </div>
       <% IF return_url %>
-        <input type="hidden" name="return_url" value="<% return_url %>">
+        <!--<input type="hidden" name="return_url" value="<% return_url %>">-->
       <% END %>
 
     <div id="passwordRest">
@@ -58,11 +61,16 @@
         <p>Enter your username to obtain an email to reset your password</p>
         <label for="username_reset">Username:</label>
         <input type="text" name="username_reset" id="username_reset">
-        <input type="submit" name="submit_reset" value="Submit">
+        <br>
+        <br>
+        <input type="submit" name="submit_reset" value="Reset">
       <% END %>
     <div>
-      </form>
+    </form>
+
 
     <% END %>
   <% END %>
 <% END %>
+
+    </fieldset>

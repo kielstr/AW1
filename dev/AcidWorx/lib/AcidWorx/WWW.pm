@@ -6,10 +6,12 @@ use Dancer2;
 use Dancer2::Plugin::Database;
 use Dancer2::Plugin::Email;
 use Dancer2::Plugin::Auth::Extensible;
+use Crypt::SaltedHash;
 
 use Text::Template;
 use FindBin qw( $RealBin );
 
+use AcidWorx::Utils;
 use AcidWorx::Artist;
 use AcidWorx::Demo;
 use AcidWorx::Management::Demos;
@@ -19,11 +21,28 @@ use Data::Dumper qw(Dumper);
 
 our $VERSION = '0.1';
 
+my $user;
+my $json;
+
+hook before => sub {
+	$user = logged_in_user;
+	$json = to_json({
+		profileImg => $user->{ 'image' },
+	});
+
+	warn Dumper($user);
+};
+
 get '/' => require_login sub {
+	
     template 'index', {
     	'page_title' => 'Management',
+    	'profile_image' => $user->{ 'image' },
+    	'JSON' => $json,
     };
 };
+
+# Artist Management 
 
 get '/manage_artists/display' => require_role Admin => sub {
 	my $artists_obj = AcidWorx::Management::Artists->new(
@@ -35,8 +54,8 @@ get '/manage_artists/display' => require_role Admin => sub {
 		'artists' => $artists_obj->get_artists,
 		'back_url' => '/manage_artists',
 		'action' => '/manage_artists/display',
+		'JSON' => $json,
 	};
-
 };
 
 post '/manage_artists/display' => require_role Admin => sub {
@@ -70,6 +89,7 @@ post '/manage_artists/display' => require_role Admin => sub {
 	template 'manage_artists/display_artist', {
 		'back_url' => '/manage_artists/display',
 		'page_title' => 'Display Artist',
+		'JSON' => $json,
 	};
 };
 
@@ -83,8 +103,8 @@ get '/manage_artists/edit' => require_role Admin => sub {
 		'artists' => $artists_obj->get_artists,
 		'back_url' => '/manage_artists',
 		'action' => '/manage_artists/edit',
+		'JSON' => $json,
 	};
-
 };
 
 post '/manage_artists/edit' => require_role Admin => sub {
@@ -127,11 +147,12 @@ post '/manage_artists/edit' => require_role Admin => sub {
 			'mode' => 'edit',
 			'action' => '/manage_artists/edit',
 			'back_url' => '/manage_artists/edit',
+			'JSON' => $json,
 		};
 
 	} elsif ( $update ) {
 		my $params = params;
-		session 'artist' => {} unless session( 'artist' );
+		#session 'artist' => {} unless session( 'artist' );
 
 		for my $param ( keys %$params ) {
 			session( 'artist' )->{ $param } = $params->{ $param };
@@ -161,6 +182,7 @@ post '/manage_artists/edit' => require_role Admin => sub {
 				'action' => '/new_artist',
 				'mode' => 'new_artist',
 				'back_url' => '/new_artist',
+				'JSON' => $json,
 			};
 		} else {
 			$artist->save;
@@ -186,12 +208,13 @@ get '/manage_artists/add' => require_role Admin => sub {
 		'mode' => 'add',
 		'action' => '/manage_artists/add',
 		'back_url' => '/manage_artists',
+		'JSON' => $json,
 	};
 };
 
 post '/manage_artists/add' => sub {
 	my $params = params;
-	session 'artist' => {} unless session( 'artist' );
+	#session 'artist' => {} unless session( 'artist' );
 
 	for my $param ( keys %$params ) {
 		session( 'artist' )->{ $param } = $params->{ $param };
@@ -216,6 +239,7 @@ post '/manage_artists/add' => sub {
 			'action' => '/manage_artists/add',
 			'mode' => 'add',
 			'back_url' => '/manage_artists',
+			'JSON' => $json,
 		};
 
 	} else {
@@ -224,78 +248,13 @@ post '/manage_artists/add' => sub {
 
 		redirect '/manage_artists';
 	}
-	
-};
-
-get '/manage_artists/demos' => require_role Admin => sub {
-	my $demos = AcidWorx::Management::Demos->new(
-		dbh => database,
-	);
-
-	template 'manage_artists/demos', {
-		'page_title' => 'Manage Demos',
-		'back_url' => '/manage_artists',
-		demos => $demos->all_demos,
-	}
-};
-
-post '/manage_artists/demos' => require_role Admin => sub {
-	
-	my $params = params;
-	my $approved;
-
-	my $demos = AcidWorx::Management::Demos->new(
-		dbh => database,
-		dont_populate => 1,
-	);
-
-	my $template = Text::Template->new(
-		TYPE => 'FILE',  
-		SOURCE => "$RealBin/../views/demo_approval.tt"
-	) or die $!;
-
-	for my $key ( keys %$params ) {
-		if ( $key =~ /^approve_/) {
-			my (undef, $token) = split '_', $key;
-			
-			$demos->set_approval( $token, $params->{$key} );
-			
-			if ( $params->{$key} == 1 ) {
-
-				my $demo = AcidWorx::Demo->new (
-					'token' => $token,
-					'dbh' => database,
-				);
-
-				my $msg = $template->fill_in ( HASH => {
-		        	'name' => $demo->name,
-		        	'link' => "http://acidworx.zapto.org/new_artist?token=$token",
-		        });
-
-				email {
-		            'from'    => 'no-reply@acidworx.com',
-		            'to'      => $demo->email,
-		            'subject' => 'Demo to AcidWorx',
-					'body'    => $msg,
-		            #attach  => '/path/to/attachment',
-		        };
-			}
-		}
-	}
-
-	$demos->populate;
-
-	template 'manage_artists/demos', {
-		'page_title' => 'Manage Demos',
-		'back_url' => '/manage_artists',
-		'demos' => $demos->all_demos,
-	}
 };
 
 get '/manage_artists' => require_role Admin => sub {
 	template 'manage_artists', {
 		'page_title' => 'Manage Artists',
 		'back_url' => '/',
+		'JSON' => $json,
 	};
 };
 
@@ -350,6 +309,7 @@ post '/manage_artists/new_requests' => require_role Admin => sub {
 		'page_title' => 'Manage Artists',
 		'back_url' => '/manage_artists',
 		'new_requests' => $artists->new_request,
+		'JSON' => $json,
 	};
 };
 
@@ -364,12 +324,94 @@ get '/manage_artists/new_requests' => require_login sub {
 		'back_url' => '/manage_artists',
 		'page_title' => 'New Artist Requests',
 		'new_requests' => $artists->new_request,
+		'JSON' => $json,
 	};
 };
+
+# Demo management
+
+get '/manage_demos' => require_role Admin => sub {
+		template 'manage_demos/manage_demos', {
+			'page_title' => 'Demos',
+			'back_url' => '/',
+			'JSON' => $json,
+		};
+};
+
+get '/manage_demo/demos' => require_role Admin => sub {
+	my $demos = AcidWorx::Management::Demos->new(
+		dbh => database,
+	);
+
+	template 'manage_demos/demos', {
+		'page_title' => 'Manage Demos',
+		'back_url' => '/manage_artists',
+		'demos' => $demos->all_demos,
+		'JSON' => $json,
+	}
+};
+
+post '/manage_demo/demos' => require_role Admin => sub {
+	
+	my $params = params;
+	my $approved;
+
+	my $demos = AcidWorx::Management::Demos->new(
+		dbh => database,
+		dont_populate => 1,
+	);
+
+	my $template = Text::Template->new(
+		TYPE => 'FILE',  
+		SOURCE => "$RealBin/../views/demo_approval.tt"
+	) or die $!;
+
+	for my $key ( keys %$params ) {
+		if ( $key =~ /^approve_/) {
+			my (undef, $token) = split '_', $key;
+			
+			$demos->set_approval( $token, $params->{$key} );
+			
+			if ( $params->{$key} == 1 ) {
+
+				my $demo = AcidWorx::Demo->new (
+					'token' => $token,
+					'dbh' => database,
+				);
+
+				my $msg = $template->fill_in ( HASH => {
+		        	'name' => $demo->name,
+		        	'link' => "http://acidworx.zapto.org/new_artist?token=$token",
+		        });
+
+				email {
+		            'from'    => 'no-reply@acidworx.com',
+		            'to'      => $demo->email,
+		            'subject' => 'Demo to AcidWorx',
+					'body'    => $msg,
+		            #attach  => '/path/to/attachment',
+		        };
+			}
+		}
+	}
+
+	$demos->populate;
+
+	template '/manage_demo/demos', {
+		'page_title' => 'Manage Demos',
+		'back_url' => '/manage_artists',
+		'demos' => $demos->all_demos,
+		'JSON' => $json,
+	}
+};
+
+# New Artist
 
 get '/new_artist' => sub {
 
 	my $token;
+
+	session 'artist' => {} unless session( 'artist' );
 
 	if ( param 'token' ) {
 		$token = param 'token';
@@ -392,10 +434,6 @@ get '/new_artist' => sub {
 			'page_title' => 'Sign Up',
 		};
 	}
-
-	session 'artist' => {} unless session( 'artist' );
-
-	my $artist_details;
 
 	my $artist = AcidWorx::Artist->new(
 		'dbh' => database,
@@ -424,10 +462,10 @@ get '/new_artist' => sub {
 
 	template 'artist', {
 		'page_title' => 'Sign Up',
-		'artist_details' => $artist_details,
 		'countries' => $country_aref,
 		'action' => '/new_artist',
 		'mode' => 'new_artist',
+		'JSON' => $json,
 	};
 };
 
@@ -435,8 +473,10 @@ post '/new_artist' => sub {
 	my $params = params;
 	session 'artist' => {} unless session( 'artist' );
 
+	my $artist_session = session( 'artist' );
+
 	for my $param ( keys %$params ) {
-		session( 'artist' )->{ $param } = $params->{ $param };
+		$artist_session->{ $param } = $params->{ $param };
 	}
 
 	my $artist = AcidWorx::Artist->new(
@@ -451,21 +491,24 @@ post '/new_artist' => sub {
 
 		my $country_aref = $artist->countries;
 
+		session 'artist' => $artist_session;
+
 		template 'artist', {
 			'page_title' => 'Sign Up',
 			'errors' => "Please enter all the required fields",
 			'countries' => $country_aref,
 			'action' => '/new_artist',
 			'mode' => 'new_artist',
+			'JSON' => $json,
 		};
 
 	} else {
 
 		my @chars = ("A".."Z", "a".."z");
 		my $code;
-		$code .= $chars[rand @chars] for 1..18;
+		$code .= $chars[rand @chars] for 1 .. 18;
 
-		session( 'artist' )->{'code'} = $code;
+		$artist_session->{ 'code' } = $code;
 
 		my $template = Text::Template->new(
 			TYPE => 'FILE',  
@@ -482,7 +525,6 @@ post '/new_artist' => sub {
 			to      => $artist->email,
 			subject => 'New artist sign up',
 			body    => $msg,
-			#attach  => '/path/to/attachment',
 		};
 
 		$artist->save;
@@ -493,6 +535,8 @@ post '/new_artist' => sub {
 			'expires' => '-1'
 		);
 
+		session 'artist' => $artist_session;
+
 		redirect '/new_artist_confirm_email';
 	}
 };
@@ -500,6 +544,7 @@ post '/new_artist' => sub {
 get '/new_artist_confirm_email' => sub {
 	template 'new_artist_confirm_email', {
 		'page_title' => 'Confirm Email',
+		'JSON' => $json,
 	};
 };
 
@@ -517,11 +562,13 @@ post '/new_artist_confirm_email' => sub {
 	
 		template 'new_artist_thankyou', {
 			'page_title' => 'Thank You',
+			'JSON' => $json,
 		};
 	} else {
 		template 'new_artist_confirm_email', {
 			'page_title' => 'Confirm Email',
 			'errors' => ["Invalid code"],
+			'JSON' => $json,
 		};
 	}
 };
@@ -529,8 +576,11 @@ post '/new_artist_confirm_email' => sub {
 get '/new_artist_thankyou' => sub {
 	template 'new_artist_thankyou', {
 		'page_title' => 'Thank You',
+		'JSON' => $json,
 	};	
 };
+
+# Send demo
 
 get '/demo' => sub {
 
@@ -560,6 +610,7 @@ get '/demo' => sub {
 	template 'demo', {
 		'page_title' => 'Send Demo',
 		'countries' => $country_aref,
+		'JSON' => $json,
 	};	
 };
 
@@ -592,6 +643,7 @@ post '/demo' => sub {
 			'page_title' => 'Send Demo',
 			'errors' => "Please enter all the required fields",
 			'countries' => $country_aref,
+			'JSON' => $json,
 		};
 
 	} else {
@@ -610,19 +662,52 @@ post '/demo' => sub {
 get '/demo_thankyou' => sub {
 	template 'demo_thankyou', {
 		'page_title' => 'Thank You',
+		'JSON' => $json,
 	};
 };
 
-get 'manage_release' => require_role Admin => sub {
+# Release Management
 
+get 'manage_release' => require_role Admin => sub {
 	template 'manage_release/index', {
 		'page_title' => 'Manage Releases',
+		'back_url' => '/',
+		'JSON' => $json,
+	};
+};
+
+get '/manage_release/add_track' => require_role Admin => sub {
+	template 'manage_release/add_track', {
+		'page_title' => 'Add Track',
+		'mode' => 'add',
+		'back_url' => '/manage_release',
+		'JSON' => $json,
+	};
+};
+
+get '/manage_release/edit_track' => require_role Admin => sub {
+	template 'manage_release/add_track', {
+		'page_title' => 'Add Track',
+		'mode' => 'edit',
+		'back_url' => '/manage_release',
+		'JSON' => $json,
+	};
+};
+
+get '/manage_release/remove_track' => require_role Admin => sub {
+	template 'manage_release/add_track', {
+		'page_title' => 'Add Track',
+		'mode' => 'remove',
+		'back_url' => '/manage_release',
+		'JSON' => $json,
 	};
 };
 
 get '/manage_release/show' => require_role Admin => sub {
 	template 'manage_release/show', {
 		'page_title' => 'Show Release',
+		'back_url' => '/manage_release',
+		'JSON' => $json,
 	};
 };
 
@@ -637,8 +722,162 @@ get '/manage_release/add' => require_role Admin => sub {
 	template 'manage_release/add', {
 		'page_title' => 'Add Release',
 		'artists' => $artists_obj->artists,
+		'back_url' => '/manage_release',
+		'JSON' => $json,
 	};
+};
 
+# User Management
+
+get '/user_management/add' => require_role Admin => sub {
+	template 'user_management/user', {
+		'page_title' => 'Add User',
+		'back_url' => '/',
+		'mode' => 'add',
+		'JSON' => $json,
+	};
+};
+
+post '/user_management/add' => require_role Admin => sub {
+	my $params = params;
+	
+	my $file = $params->{ 'profile_image' };
+	my $data = request->upload( 'profile_image' );
+ 
+    my $dir = path(config->{appdir}, '/public/images/profile');
+    mkdir $dir if not -e $dir;
+ 
+    my $path = path($dir, $data->basename);
+
+    $data->link_to($path);
+
+	create_user (
+		'username' => $params->{ 'username' }, 
+		'email' => $params->{ 'email' }, 
+		'email_welcome' => 1,
+		'id' => undef,
+		'image' => "/images/profile/$file",
+	);
+
+	template 'user_management/user', {
+		'page_title' => 'Edit User',
+		'back_url' => '/',
+		'mode' => 'add',
+		'JSON' => $json,
+	};
+};
+
+get '/user_management/edit' => require_role Admin => sub {
+
+	my $username = param( 'username' );
+
+	if ( $username ) {
+
+		my $user_details = get_user_details( $username );
+
+		return template 'user_management/user', {
+			'page_title' => 'Edit User',
+			'back_url' => '/',
+			'mode' => 'edit',
+			'JSON' => $json,
+			'user_details' => $user_details,
+		};
+
+	} else {
+
+		my $utils = AcidWorx::Utils->new(
+			dbh => database,
+		);
+
+		my $all_users = $utils->all_users;
+
+		return template 'user_management/select_user', {
+			'page_title' => 'Select user',
+			'back_url' => '/',
+			'mode' => 'edit',
+			'JSON' => $json,
+			'all_users' => $all_users,
+		};
+	}	
+};
+
+post '/user_management/edit' => require_role Admin => sub {
+
+	my $params = params;
+
+	my $file = $params->{ 'profile_image' };
+
+    my %update_details;
+
+	if ( $file ) {
+		my $data = request->upload( 'profile_image' );
+ 
+	    my $dir = path(config->{appdir}, '/public/images/profile');
+	    mkdir $dir if not -e $dir;
+	 
+	    my $path = path($dir, $data->basename);
+
+	    $data->link_to($path);
+
+	    $update_details{ 'image' } = "/images/profile/$file"
+    		if $params->{ "profile_image" };
+
+	}
+	
+    $update_details{ 'email' } = $params->{ "email" } 
+    	if $params->{ "email" };
+
+	update_user( $params->{ "username" }, %update_details )
+		if $update_details{ 'image' } or $update_details{ 'email' };
+
+	redirect '/';
+};
+
+get '/user_management/remove' => require_role Admin => sub {
+	template 'user_management/user', {
+		'page_title' => 'Remove User',
+		'back_url' => '/',
+		'mode' => 'remove',
+		'JSON' => $json,
+	};
+};
+
+post '/user_management/remove' => require_role Admin => sub {
+	template 'user_management/user', {
+		'page_title' => 'Remove User',
+		'back_url' => '/',
+		'mode' => 'remove',
+		'JSON' => $json,
+	};
+};
+
+# User change password
+
+get '/user_management/change_password' => require_login sub {
+	template 'user_management/change_password', {
+		'page_title' => 'Change Password',
+		'back_url' => '/',
+		'JSON' => $json,
+	};
+};
+
+post '/user_management/change_password' => require_login sub {
+	my $params = params;
+
+	if ( $params->{ 'password' } eq $params->{ 'password_confirm' }) {
+	    user_password( 
+	    	'username' => $user->{ 'username' }, 
+	    	'new_password' => $params->{ 'password' } 
+	    );
+		redirect '/';
+	} else {
+		template 'user_management/change_password', {
+			'page_title' => 'Change Password',
+			'back_url' => '/manage_release',
+			'errors' => "Passwords don't match",
+			'JSON' => $json,
+		};
+	}
 };
 
 true;

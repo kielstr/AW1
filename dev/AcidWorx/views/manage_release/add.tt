@@ -1,14 +1,14 @@
 
 <script type="text/javascript" src="/javascripts/AcidWorxAddRelease.js"></script>
 <br>
-<div id="page">
+<fieldset>
   <div class="pageText">
 
   <div>
   	<label>Artist</label>
     <select name="artists">
     <%FOR artist IN artists%>
-      <option><% artist %></option>
+      <option value=<% artist.id %>><% artist.name %></option>
     <%END%>
     </select>
   </div>
@@ -56,9 +56,4 @@
 
 
   </div>
-</div>
-
-
-<pre>
-<% #USE Dumper; Dumper.dump_html({ artists => artists }) %>
-</pre>
+</fieldset>

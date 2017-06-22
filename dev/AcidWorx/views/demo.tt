@@ -19,7 +19,7 @@
 <fieldset>
 <legend>Details</legend>
 
-<form method="post" action="/demo">
+<form method="post" action="/demo" novalidate="novalidate">
 <br>
 <div class="required">
   <input id="name" type="text" name="name" value="<%session.demo.name%>" required>

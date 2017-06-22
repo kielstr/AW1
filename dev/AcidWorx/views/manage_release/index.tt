@@ -1,7 +1,11 @@
 <br>
-<div id="page">
+<fieldset>
   <div class="pageText">
+	<p><a href="/manage_release/add_track">Add Track</a></p>
+	<p><a href="/manage_release/edit_track">Edit Track</a></p>
+	<p><a href="/manage_release/remove_track">Remove Track</a></p>
+
     <p><a href="/manage_release/add">Add Release</a></p>
     <p><a href="/manage_release/show">Show Release</a></p>
   </div>
-</div>
+</fieldset>

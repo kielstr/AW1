@@ -19,7 +19,7 @@
 			<div class="row">
 				<div class="cell center cellValignCenter width50percent"><img src="/images/icons/demoManagementIcon.png"></div>
 				<div class="cell cellValignCenter width50percent">
-					<a href="/manage_release">Demo Management</a>
+					<a href="/manage_demos">Demo Management</a>
 				</div>
 			</div>
 		</div>
@@ -38,21 +38,22 @@
 			<div class="row">
 				<div class="cell center cellValignCenter width50percent"><img src="/images/icons/addUserIcon.png"></div>
 				<div class="cell cellValignCenter width50percent">
-					<a href="/manage_artists">Add User</a>
+					<a href="/user_management/add">Add User</a>
 				</div>
 			</div>
 			<br>
 			<div class="row">
 				<div class="cell center cellValignCenter width50percent"><img src="/images/icons/editUserIcon.png"></div>
-				<div class="cell cellValignCenter width50percent"><a href="/manage_release">Edit User</a></div>
+				<div class="cell cellValignCenter width50percent"><a href="/user_management/edit">Edit User</a></div>
 			</div>
-			<br>
+			<!-- <br>
 			<div class="row">
 				<div class="cell center cellValignCenter width50percent"><img src="/images/icons/removeUserIcon.png"></div>
 				<div class="cell cellValignCenter width50percent">
-					<a href="/manage_release">Remove User</a>
+					<a href="/user_management/remove">Remove User</a>
 				</div>
 			</div>
+			-->
 		</div>
 	</div>
 	<br>

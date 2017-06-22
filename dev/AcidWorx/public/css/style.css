@@ -56,6 +56,7 @@ body {
 
 #sideMenuIcon {
     height: 56px;
+    display: none;
 }
 
 /* sub header content */
@@ -129,7 +130,7 @@ input[type="password"] {
     border-radius: 10px;
 }
 
-
+input[type="submit"],
 button {
 	width: 98%;
     height:34px;
