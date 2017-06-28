@@ -338,7 +338,7 @@ get '/manage_demos' => require_role Admin => sub {
 		};
 };
 
-get '/manage_demo/demos' => require_role Admin => sub {
+get '/manage_demos/new_demos' => require_role Admin => sub {
 	my $demos = AcidWorx::Management::Demos->new(
 		dbh => database,
 	);
@@ -351,7 +351,7 @@ get '/manage_demo/demos' => require_role Admin => sub {
 	}
 };
 
-post '/manage_demo/demos' => require_role Admin => sub {
+post '/manage_demos/new_demos' => require_role Admin => sub {
 	
 	my $params = params;
 	my $approved;
@@ -397,7 +397,7 @@ post '/manage_demo/demos' => require_role Admin => sub {
 
 	$demos->populate;
 
-	template '/manage_demo/demos', {
+	template '/manage_demos/demos', {
 		'page_title' => 'Manage Demos',
 		'back_url' => '/manage_artists',
 		'demos' => $demos->all_demos,
@@ -614,10 +614,50 @@ get '/demo' => sub {
 	};	
 };
 
+get '/upload' => sub {
+	template 'upload', { 
+		JSON => undef
+	};
+};
+
+post '/upload' => require_role Admin => sub {
+	my $params = params;
+
+	warn "In post upload";
+
+	my $data = request->upload( 'file' );
+
+	warn ( "***** tmp file location: " . $data->tempname );
+ 
+    #my $dir = path(config->{appdir}, '/demo_uploads/');
+    #mkdir $dir if not -e $dir;
+
+    my $dir = '/mnt/acidworx/uploads';
+ 
+    warn "***** writing to $dir";
+
+    my $path = path($dir, $data->basename) or die $!;
+
+    $data->link_to($path);
+
+    warn "mv $data->tempname $path" or die $!;
+
+};
+
 post '/demo' => sub {
 	my $params = params;
 
 	session 'demo' => {} unless session( 'demo' );
+
+	my $data = request->upload( 'file' );
+ 
+    my $dir = path(config->{appdir}, '/home/acidworx/demo_uploads/');
+    mkdir $dir if not -e $dir;
+ 
+    my $path = path($dir, $data->basename);
+
+    $data->link_to($path);
+
 
 	for my $param ( keys %$params ) {
 		session( 'demo' )->{ $param } = $params->{ $param };

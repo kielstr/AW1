@@ -1,6 +1,6 @@
 
 <%IF demos %>
-<form method="post" action="/manage_artists/demos">
+<form method="post" action="/manage_demos/new_demos">
   <div class="table width90Percent centerTable">
     <div class="row">
         <div class="tableHeader">Artist Name</div>

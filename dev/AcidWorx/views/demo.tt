@@ -1,8 +1,8 @@
 <script src="javascripts/demo.js"></script>
 <div class="pageText">
-  <p>
+
   Please read and provide the required information to complete your demo submission. Due to the large amount of demos we receive weekly, we will not be able to give feedback to everyone. Someone from our A&amp;R team will be in touch within 7-14 days, but ONLY if we feel that your demo is of interest to our label.
-  </p>
+  <br>
 
   <h3>Before sending your demos, please read this first!</h3>
   <ul>
@@ -19,7 +19,7 @@
 <fieldset>
 <legend>Details</legend>
 
-<form method="post" action="/demo" novalidate="novalidate">
+<form method="post" action="/demo" novalidate="novalidate" enctype="multipart/form-data">
 <br>
 <div class="required">
   <input id="name" type="text" name="name" value="<%session.demo.name%>" required>
@@ -73,6 +73,13 @@
   <label for="link">Link to your demo</label>
 </div>
 <br>
+
+
+<div class="required">
+  <input id="file" type="file" name="link" id="file">
+  <label for="file">Upload your demo</label>
+</div>
+
 <div>
   <textarea id="demoDesc" cols="20" rows="10" name="demo_desc" required><%session.demo.demo_desc%></textarea>
   <label for="demoDesc">Demo desription</label>

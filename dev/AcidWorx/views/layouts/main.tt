@@ -14,6 +14,7 @@
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
 <meta http-equiv="Content-type" content="text/html; charset=[% settings.charset %]" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
+<meta name="theme-color" content="#000000" />
 
 <title>AcidWorx</title>
 <link rel="stylesheet" href="<% request.uri_base %>/css/style.css" />
@@ -26,6 +27,8 @@
 
 <script src="/javascripts/AcidWorx.js"></script>
 <script src="/javascripts/AcidWorxUtils.js"></script>
+
+<%IF JSON%>
 <script type="text/javascript">
 $( document ).ready(function () {
   
@@ -42,6 +45,8 @@ $( document ).ready(function () {
 });
 
 </script>
+
+<%END%>
 
 </head>
 <body>

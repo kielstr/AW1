@@ -35,7 +35,6 @@ displayUserIcon.png"></div>
 </fieldset>
 
 <br>
-<br>
 
 <fieldset>
   <legend>New Requests</legend>
@@ -47,15 +46,11 @@ displayUserIcon.png"></div>
         <div class="cell cellValignCenter width50percent"><a href="/manage_artists/new_requests">New Artists Requests</a></div>
       </div>
       <br>
-      <div class="row">
-        <div class="cell center cellValignCenter width50percent"><img src="/images/icons/demoManagementIcon.png"></div>
-        <div class="cell cellValignCenter width50percent"><a href="/manage_artists/demos">New demo Requests</a></div>
-      </div>
-      <br>
     </div>
   </div>
   <br>
 
 </fieldset>
 
+<br>
 
