@@ -629,18 +629,15 @@ post '/upload' => require_role Admin => sub {
 
 	warn ( "***** tmp file location: " . $data->tempname );
  
-    #my $dir = path(config->{appdir}, '/demo_uploads/');
-    #mkdir $dir if not -e $dir;
-
-    my $dir = '/mnt/acidworx/uploads';
- 
-    warn "***** writing to $dir";
+    my $dir = path('/mnt/acidworx/uploads');
+    mkdir $dir if not -e $dir;
 
     my $path = path($dir, $data->basename) or die $!;
+ 	$data->link_to($path) or die $!;
 
-    $data->link_to($path);
 
-    warn "mv $data->tempname $path" or die $!;
+    #my $dir = '/mnt/acidworx/uploads';
+    #warn "mv $data->tempname $path" or die $!;
 
 };
 
@@ -649,14 +646,11 @@ post '/demo' => sub {
 
 	session 'demo' => {} unless session( 'demo' );
 
-	my $data = request->upload( 'file' );
- 
-    my $dir = path(config->{appdir}, '/home/acidworx/demo_uploads/');
-    mkdir $dir if not -e $dir;
- 
-    my $path = path($dir, $data->basename);
-
-    $data->link_to($path);
+#	 my $data = request->upload( 'file' );
+#    my $dir = path(config->{appdir}, '/home/acidworx/demo_uploads/');
+#    mkdir $dir if not -e $dir;
+#    my $path = path($dir, $data->basename);
+#    $data->link_to($path);
 
 
 	for my $param ( keys %$params ) {
