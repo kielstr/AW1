@@ -29,8 +29,6 @@ hook before => sub {
 	$json = to_json({
 		profileImg => $user->{ 'image' },
 	});
-
-	warn Dumper($user);
 };
 
 get '/' => require_login sub {
@@ -586,6 +584,8 @@ get '/demo' => sub {
 
 	session 'demo' => {} unless session( 'demo' );
 
+	my $page_session = session 'demo';
+
 	my $demo = AcidWorx::Demo->new (
 		'dbh' => database,
 		'token' => ( cookies->{ 'artist' } and cookies->{ 'artist' }->value
@@ -593,23 +593,24 @@ get '/demo' => sub {
 	);
 
 	if ( $demo->token ) {
-		session 'demo' => {
-			'name' => $demo->name,
-			'artist_name' => $demo->artist_name,
-			'country_id' => $demo->country_id,
-			'token' => $demo->token,
-		};
+		$page_session->{ 'name' } = $demo->name;
+		$page_session->{ 'artist_name' } = $demo->artist_name;
+		$page_session->{ 'country_id' } = $demo->country_id;
+
+	} else {
+		$demo->generate_token;
 	}
 
-	session( 'demo' )->{ 'sent_to_other' } ||= 0;
+	$page_session->{ 'token' } = $demo->token;
+	$page_session->{ 'sent_to_other' } ||= 0;
 	
 	$demo->populate_countries;
 
-	my $country_aref = $demo->countries;
+	session 'demo' => $page_session;
 
 	template 'demo', {
 		'page_title' => 'Send Demo',
-		'countries' => $country_aref,
+		'countries' => $demo->countries,
 		'JSON' => $json,
 	};	
 };
@@ -623,22 +624,16 @@ get '/upload' => sub {
 post '/upload' => require_role Admin => sub {
 	my $params = params;
 
-	warn "In post upload";
+	#warn Dumper $params;
 
 	my $data = request->upload( 'file' );
-
-	warn ( "***** tmp file location: " . $data->tempname );
  
     my $dir = path('/mnt/acidworx/uploads');
     mkdir $dir if not -e $dir;
 
     my $path = path($dir, $data->basename) or die $!;
- 	$data->link_to($path) or die $!;
-
-
-    #my $dir = '/mnt/acidworx/uploads';
-    #warn "mv $data->tempname $path" or die $!;
-
+ 	$data->copy_to($path) or die $!;
+ 	#$data->unlink_tmpfile;
 };
 
 post '/demo' => sub {

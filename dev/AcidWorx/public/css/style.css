@@ -15,7 +15,7 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 100;
+    z-index: 10;
 }
 
 #pageHeader,
@@ -367,8 +367,6 @@ form > div > input:valid {
 	display: none;
 }
 
-
-
 @media (max-width: 400px)  {
 
 	fieldset {
@@ -402,8 +400,6 @@ form > div > input:valid {
 	#acidworxLogo {
 		height: 50px;
 	}
-
-}
 
 }
 

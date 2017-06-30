@@ -115,7 +115,7 @@ sub save {
 		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
 	~;
 
-	$self->token( Session::Token->new(entropy => 256)->get );
+	$self->token( $self->generate_token ) unless $self->token;
 
 	$dbh->do( $sql, {}, 
 		$self->name,
@@ -129,6 +129,13 @@ sub save {
 		$self->descripton,
 	) or die $dbh->errstr;
 
+}
+
+sub generate_token {
+	my $self = shift;
+	my $token = Session::Token->new(entropy => 256)->get;
+	$self->token( $token );
+	return $token;
 }
 
 sub populate_from_token {

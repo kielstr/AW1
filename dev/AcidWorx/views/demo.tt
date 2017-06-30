@@ -1,3 +1,72 @@
+
+<style>
+.pageShaddow {
+  position: fixed;
+  top:0;
+  width: 100vw;
+  height: 100vh;
+  background-color: black;
+  opacity: .5;
+  z-index: 20;
+}
+
+.pagePopUp {
+  background-color: white;
+  height: 400px;
+  width: 600px;
+
+  z-index: 100;
+  position:fixed;
+  top: calc(50vh - 200px);
+  left: calc(50vw - 300px);
+}
+
+.pagePopUp #emailIcon {
+  height: 250px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#popUpPage {
+  display: none;
+}
+
+@media (max-width: 400px)  {
+  .pagePopUp {
+    background-color: white;
+    height: 400px;
+    width: 350px;
+
+    z-index: 100;
+    position:fixed;
+    top: calc(50vh - 175px);
+    left: calc(50vw - 300px);
+  }
+
+  .pagePopUp #emailIcon {
+    height: 250px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+}
+
+</style>
+<div id="popUpPage">
+<div class="pagePopUp">
+  <p class="pageText">
+    <img src="/images/icons/emailIcon.png" id="emailIcon">
+    Your email is important to us! All our comunication is done via it. So we have sent you a code to this email and you need to enter it below to continue.
+    <br>
+    <br>
+    <input type="text" id="emailConfirmCode">
+</p>
+</div>
+<div class="pageShaddow"></div>
+</div>
+
 <script src="javascripts/demo.js"></script>
 <div class="pageText">
 
@@ -74,11 +143,37 @@
 </div>
 <br>
 
+<link rel="stylesheet" href="/css/dropzone.css">
+<script src="/javascripts/dropzone.js"></script>
 
-<div class="required">
-  <input id="file" type="file" name="link" id="file">
-  <label for="file">Upload your demo</label>
+<script>
+$(function() {
+
+    pageToken = "<%session.demo.token%>";
+
+  
+    // "myAwesomeDropzone" is the camelized version of the HTML element's ID
+    Dropzone.options.fileUploader = {
+      paramName: "file", // The name that will be used to transfer the file
+      maxFilesize: 150, // MB
+      timeout: 1000000000,
+      addRemoveLinks: true,
+      params: {
+        token: "<%session.demo.token%>"
+      },
+      url: "/upload"
+    };
+
+    //$("#fileUploader").dropzone({ url: "/upload" });
+});
+</script>
+
+<div class="dropzone" id="fileUploader">
+  <div class="fallback">
+    <input name="file" type="file" />
+  </div>
 </div>
+<br>
 
 <div>
   <textarea id="demoDesc" cols="20" rows="10" name="demo_desc" required><%session.demo.demo_desc%></textarea>
@@ -87,4 +182,5 @@
 </br>
 <button type="submit" value="Submit Demo">Submit Demo</button>
 </form>
+
 </fieldset>
