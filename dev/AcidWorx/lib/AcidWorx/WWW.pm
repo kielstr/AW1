@@ -603,7 +603,11 @@ get '/demo' => sub {
 
 	$page_session->{ 'token' } = $demo->token;
 	$page_session->{ 'sent_to_other' } ||= 0;
+	$page_session->{ 'send_by' } ||= 'link';
+	$page_session->{ 'logged_in' } = ( $user->{ 'username' } ? 'true' : 'false' );
 	
+	#warn Dumper $user;
+
 	$demo->populate_countries;
 
 	session 'demo' => $page_session;
@@ -615,13 +619,13 @@ get '/demo' => sub {
 	};	
 };
 
-get '/upload' => sub {
+get '/upload' => require_login sub {
 	template 'upload', { 
 		JSON => undef
 	};
 };
 
-post '/upload' => require_role Admin => sub {
+post '/upload' => require_login sub {
 	my $params = params;
 
 	#warn Dumper $params;
@@ -641,20 +645,15 @@ post '/demo' => sub {
 
 	session 'demo' => {} unless session( 'demo' );
 
-#	 my $data = request->upload( 'file' );
-#    my $dir = path(config->{appdir}, '/home/acidworx/demo_uploads/');
-#    mkdir $dir if not -e $dir;
-#    my $path = path($dir, $data->basename);
-#    $data->link_to($path);
-
+	my $page_session = session 'demo';
 
 	for my $param ( keys %$params ) {
-		session( 'demo' )->{ $param } = $params->{ $param };
+		$page_session->{ 'demo' }{ $param } = $params->{ $param };
 	}
 
-	session( 'demo' )->{ 'sent_to_other' } ||= 0;
+	$page_session->{ 'demo' }{ 'sent_to_other' } ||= 0;
 
-	my $template_data = session( 'demo' );
+ 	session 'demo' => $page_session->{ 'demo' };
 
 	my $demo = AcidWorx::Demo->new (
 		'dbh' => database,

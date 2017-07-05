@@ -1,0 +1,126 @@
+.pageShadow {
+  position: fixed;
+  top:0;
+  width: 100vw;
+  height: 100vh;
+  background-color: black;
+  opacity: .5;
+  z-index: 20;
+  display: none;
+}
+
+.pageError {
+  display: none;
+}
+
+.pageError .pagePopUp {
+  background-color: white;
+  height: 470px;
+  width: 600px;
+  z-index: 100;
+  position:fixed;
+  top: calc(50vh - 235px);
+  left: calc(50vw - 300px);
+  border-radius: 4px;
+  //  -webkit-transition: width 1s, height 1s; /* Safari */
+  //transition: width 1s, height 1s;
+}
+
+.pageError .pagePopUp #emailIcon {
+  height: 250px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+
+  //-webkit-transition: width .5s, height .5s; /* Safari */
+  //transition: width .5s, height .5s;
+}
+
+.pageError .error {
+  border: 1px solid black;
+}
+
+
+@media (max-width: 500px)  {
+
+  body {
+    font-size: 14px;
+  }
+
+  .pageError .pagePopUp {
+    height: 360px !important;
+    width: 350px !important;
+    top: calc(50vh - 180px) !important;
+    left: calc(50vw - 175px) !important;
+  }
+
+  .pageError .pagePopUp #emailIcon {
+    height: 150px !important;
+    display: block !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .pageError .pagePopUp #emailIcon {
+    //height: 167px !important;
+  }
+}
+
+
+
+
+.confirmEmail {
+  display: none;
+}
+
+.confirmEmail .pagePopUp {
+  background-color: white;
+  height: 470px;
+  width: 600px;
+  z-index: 100;
+  position:fixed;
+  top: calc(50vh - 235px);
+  left: calc(50vw - 300px);
+  border-radius: 4px;
+  //  -webkit-transition: width 1s, height 1s; /* Safari */
+  //transition: width 1s, height 1s;
+}
+
+.confirmEmail .pagePopUp #emailIcon {
+  height: 250px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+
+  //-webkit-transition: width .5s, height .5s; /* Safari */
+  //transition: width .5s, height .5s;
+}
+
+#popUpPage {
+  display: none;
+}
+
+@media (max-width: 500px)  {
+
+  body {
+    font-size: 14px;
+  }
+
+  .confirmEmail .pagePopUp {
+    height: 360px !important;
+    width: 350px !important;
+    top: calc(50vh - 180px) !important;
+    left: calc(50vw - 175px) !important;
+  }
+
+  .confirmEmail .pagePopUp #emailIcon {
+    height: 150px !important;
+    display: block !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .confirmEmail .pagePopUp #emailIcon {
+    //height: 167px !important;
+  }
+}

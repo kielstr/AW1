@@ -9,7 +9,6 @@
 <!-- include alertify script -->
 <script src="/javascripts/alertify.js"></script>
 
-
 <link rel="icon" href="/images/icon.jpg" />
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
 <meta http-equiv="Content-type" content="text/html; charset=[% settings.charset %]" />
@@ -18,7 +17,6 @@
 
 <title>AcidWorx</title>
 <link rel="stylesheet" href="<% request.uri_base %>/css/style.css" />
-
 <link rel="stylesheet" href="/css/style.css" />
 
 <!-- Grab jQuery from a CDN, fall back to local if necessary -->
@@ -26,6 +24,9 @@
 <script type="text/javascript">/* <![CDATA[ */
     !window.jQuery && document.write('<script type="text/javascript" src="<% request.uri_base %>/javascripts/jquery.js"><\/script>')
 /* ]]> */</script>
+
+
+<link rel="stylesheet" href="/css/AcidWorxPopUp.css" />
 
 <script src="/javascripts/AcidWorx.js"></script>
 <script src="/javascripts/AcidWorxUtils.js"></script>
@@ -35,7 +36,7 @@
 $( document ).ready(function () {
   
   var user = jQuery.parseJSON( '<%JSON%>' );
-  console.log( user.profileImg );
+  //console.log( user.profileImg );
 
   //$( "#profileMenuIcon" ).css('background-image', 'url(/images/profile/acid%20child%20logo.jpg)' );
 
@@ -74,12 +75,25 @@ $( document ).ready(function () {
 			<div class="cell center cellValignCenter"><img id="acidworxLogo" class="center" src="/images/acidworx.jpg"></div>
 			<%IF session.logged_in_user%>
 			<div class="cell center sideMenuIconWidth cellValignCenter"> 
-				<div id="profileMenuIcon" class="center"></div>
-				<div id="profileDropDown" class="dropdown-content">
-				    <a href="#">Edit Profile</a>
-				    <a href="/user_management/change_password">Change Password</a>
-				    <a href="/logout">Log Out</a>
-			  	</div>
+        
+        <div class="table">
+          <div class="row">
+
+    				<div id="profileMenuIcon" class="center profileMenuIconWidth cell"></div>
+
+            <div class="profileMenuText cell">Acid Child ... </div>
+          </div>
+        </div>
+
+        <div id="profileDropDown" class="dropdown-content">
+          <a href="#">Edit Profile</a>
+          <a href="/user_management/change_password">Change Password</a>
+          <a href="/logout">Log Out</a>
+        </div>
+
+
+
+
 			</div>
 			<%END%>
 		</div>
@@ -114,11 +128,6 @@ $( document ).ready(function () {
 </pre>
 -->
 <%END%>
-
-
-<pre>
-<% USE Dumper; Dumper.dump_html({ session => session }) %>
-</pre>
 
 </body>
 </html>

@@ -30,7 +30,7 @@ my %validate_subs = (
 	email => \&notnull,
 	sent_to_other => undef,
 	released_on => undef,
-	link => \&notnull,
+	link => undef,
 	descripton => undef,
 	approved => undef,
 );
