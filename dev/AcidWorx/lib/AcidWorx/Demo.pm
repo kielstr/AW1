@@ -159,7 +159,7 @@ sub populate_from_token {
 
 }
 
-sub files {
+sub _files {
 	my $self = shift;
 	my $dbh = $self->dbh;
 	my $token = $self->token;

@@ -235,6 +235,7 @@ $(function() {
   </div>
 </div>
 
+<br>
 
 <fieldset>
 <legend>Details</legend>
@@ -327,7 +328,7 @@ $(function() {
   <textarea id="demoDesc" cols="20" rows="10" name="descripton" required><%session.demo.demo_desc%></textarea>
   <label for="demoDesc">Demo desription</label>
 </div>
-<div><span>char:</span> <span id="charCountDown"></span></div>
+<!--- <div><span>char:</span> <span id="charCountDown"></span></div> -->
 </br>
 <br>
 <button type="button" value="Submit Demo" id="submitButton">Submit Demo</button>

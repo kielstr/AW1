@@ -33,6 +33,10 @@ div.tagsinput span.tag {
   background-repeat: no-repeat;
   background-size: 50% 159%;
   background-position: 53% 75%;
+  width: 90%;
+  margin: 0 auto;
+  //border: 1px dotted black;
+
 }
 
 .dropzone {
