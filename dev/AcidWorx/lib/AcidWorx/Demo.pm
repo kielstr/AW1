@@ -22,6 +22,8 @@ has 'descripton' => ( 'is' => 'rw', 'isa' => 'Maybe[Str]' );
 has 'errors' => ( 'is' => 'rw', 'isa' => 'Maybe[ArrayRef]' );
 has 'token' => ( 'is' => 'rw', 'isa' => 'Maybe[Str]' );
 has 'approved' => ( 'is' => 'rw', 'isa' => 'Bool' );
+has 'sent_by' => ( 'is' => 'rw', 'isa' => 'Str' );
+has 'files' => ( 'is' => 'rw', 'isa' => 'ArrayRef');
 
 my %validate_subs = (
 	artist_name => \&notnull,
@@ -111,8 +113,9 @@ sub save {
 			sent_to_other,
 			released_on,
 			link,
-			description
-		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+			description,
+			sent_by
+		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 	~;
 
 	$self->token( $self->generate_token ) unless $self->token;
@@ -127,6 +130,7 @@ sub save {
 		$self->released_on,
 		$self->link,
 		$self->descripton,
+		$self->sent_by,
 	) or die $dbh->errstr;
 
 }
@@ -153,6 +157,18 @@ sub populate_from_token {
 	$self->country_id( $demo->{ 'country_id' } );
 	$self->approved( $demo->{ 'approved' } );
 
+}
+
+sub files {
+	my $self = shift;
+	my $dbh = $self->dbh;
+	my $token = $self->token;
+
+	my $sql = "SELECT * FROM file_to_token_map WHERE token = ?";
+
+	my $files = $dbh->selectall_arrayref($sql, {}, $token);
+
+	$self->files($files);
 }
 
 __PACKAGE__->meta->make_immutable;

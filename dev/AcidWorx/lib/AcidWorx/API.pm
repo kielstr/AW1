@@ -3,6 +3,7 @@ package AcidWorx::API;
 use Dancer2;
 use Dancer2::Plugin::Database;
 use Dancer2::Plugin::Email;
+use Dancer2::Plugin::Auth::Extensible;
 
 use v5.20;
 use AcidWorx::Email;
@@ -61,8 +62,6 @@ get '/confirm_email/:token/:code' => sub {
 		confirm_code => params->{ 'code' },
 	);
 
-	warn Dumper $acidworx_email;
-
 	if ( $acidworx_email->vaild_confirm_code ) {
 		$acidworx_email->delete;
 		return {status => 'ok'};
@@ -72,6 +71,50 @@ get '/confirm_email/:token/:code' => sub {
 
 };
 
+get '/demo/remove-file/:filename' => require_login sub {
+	my $demo_session = session 'demo';
+
+	my $demo_files = $demo_session->{ 'files' };
+
+	my @files_buffer;
+
+	my $file_count = int @$demo_files;
+
+	for my $file (@$demo_files) {
+		warn "file_count: $file_count --  Checking file " . Dumper ($file);
+    	if (params->{ 'filename' } ne $file->{ 'filename' }) {
+    		push @files_buffer, $file;
+    	} else {
+    		# remove file from disk and database.
+    		unlink $file->{ 'path' }
+    			if -e $file->{ 'path' };
+    		warn "*** removing file $file->{'path'}";
+    		
+    		my @path = split '/', $file->{ 'path' };
+    		my $parent_dir = join '/', @path[0 .. ($#path - 1)];
+			
+			if ($file_count == 1 and -e $parent_dir) {
+				warn "** removing path $parent_dir\n";
+    			rmdir $parent_dir;
+    		}
+    		
+
+    		my $file = AcidWorx::File->new(
+		 		'token' => $demo_session->{ 'token' },
+		 		'filename' => $file->{ 'filename' },
+		 		'dbh' => database,
+		 	);
+
+		 	$file->remove;
+    	}
+	}
+
+	$demo_session->{ 'files' } = \@files_buffer;
+
+	session 'demo' => $demo_session;
+
+	return {status => 'ok'};
+};
 
 
 true;

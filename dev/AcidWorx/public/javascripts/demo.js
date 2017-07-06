@@ -6,6 +6,8 @@ $(function() {
 
     Dropzone.options.fileUploader = {
 		paramName : "file",
+		parallelUploads : 1,
+		//acceptedFiles : "application/zip,application/octet-stream,audio/mpeg3,audio/x-mpeg-3,",
 		maxFilesize : 150,
 		timeout : 1000000000,
 		addRemoveLinks : true,
@@ -30,6 +32,28 @@ $(function() {
 			this.on("removedfile", function(file) {  
 		    	var index = acidworx.demo.files.indexOf(file.name);
 		    	acidworx.demo.files.splice(index, 1);
+
+		    	// tell server.
+
+		    	console.log('Client: I have removed file ' + file.name);
+
+		    	$.ajax({
+		            url: '/api/demo/remove-file/' +  file.name,
+		            type: "GET",
+		            contentType: "application/json",
+		            success: function(data) {
+		                if (data.status == "ok" ) {
+		                    // all good.
+		                } else {
+		                    alert("Server failed " + data.error);
+		                }
+		            },
+		            error: function(XMLHttpRequest, textStatus, errorThrown) {
+		                alert("Server failed " + textStatus);
+		            }
+		        });
+
+
 		    	if (acidworx.demo.mode === "validating" && index === 0) {
 					console.log("removing file -- adding red border class");
 				  	$(".dropzone").addClass("borderRed");
@@ -39,27 +63,27 @@ $(function() {
 		    this.on("sending", function(file) {  
 		    	var index = acidworx.demo.files.indexOf(file.name);
 		    	// mark file as sending
-		    	alert("upload sending");
+		    	//alert("upload sending");
 		    }),
 		    this.on("success", function(file) {  
 		    	var index = acidworx.demo.files.indexOf(file.name);
 		    	// mark file as successful
-		    	alert("upload successful");
+		    	//alert("upload successful");
 		    }),
 		    this.on("canceled", function(file) {  
 		    	var index = acidworx.demo.files.indexOf(file.name);
 		    	// mark file as canceled
-		    	alert("upload canceled");
+		    	//alert("upload canceled");
 		    }),
 		    this.on("error", function(file, errorMessage) {  
 		    	var index = acidworx.demo.files.indexOf(file.name);
 		    	// mark file as error
-		    	alert("upload error: " + errorMessage);
+		    	//alert("upload error: " + errorMessage);
 		    }),
 			this.on("complete", function(file, errorMessage) {  
 		    	var index = acidworx.demo.files.indexOf(file.name);
 		    	// mark file as complete
-		    	alert("upload complete");
+		    	//alert("upload complete");
 		    });
 
 		 }
@@ -167,7 +191,7 @@ $(function() {
 			$("#linkContainer").hide();
 
 			if (acidworx.demo.loggedIn === true) {
-				$("#fileUploadContainer").show();
+				$("#fileUploader").show();
 			} else {
 				$(".noLoginUpload").show();
 			}
@@ -179,7 +203,7 @@ $(function() {
 			$("#linkContainer").show();
 
 			if (acidworx.demo.loggedIn === true) {
-				$("#fileUploadContainer").hide();
+				$("#fileUploader").hide();
 			} else {
 				$(".noLoginUpload").hide();
 			}
@@ -190,12 +214,21 @@ $(function() {
 
 	$("#link").change(function () {
 		acidworx.demo.linkURL = $( "#link" ).val();
+		// insert a link array with objects of URL and valid
+
+		var link = {
+			URL : $( "#link" ).val(),
+			valid : false
+		};
 
 		if(/^(http|https|ftp):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/i.test($("#link").val())) {
 	    	$("#link").removeClass("borderRed");
+	    	link.valid = true;
 		} else {
 			$("#link").addClass("borderRed");
 		}
+
+		acidworx.demo.link = link;
 	});
 
 	var demoDesc = 255;

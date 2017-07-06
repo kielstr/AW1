@@ -14,6 +14,7 @@ use FindBin qw( $RealBin );
 use AcidWorx::Utils;
 use AcidWorx::Artist;
 use AcidWorx::Demo;
+use AcidWorx::File;
 use AcidWorx::Management::Demos;
 use AcidWorx::Management::Artists;
 
@@ -582,35 +583,26 @@ get '/new_artist_thankyou' => sub {
 
 get '/demo' => sub {
 
-	session 'demo' => {} unless session( 'demo' );
+	my $demo = AcidWorx::Demo->new (
+		'dbh' => database,
+	);
 
 	my $page_session = session 'demo';
 
-	my $demo = AcidWorx::Demo->new (
-		'dbh' => database,
-		'token' => ( cookies->{ 'artist' } and cookies->{ 'artist' }->value
-			? cookies->{ 'artist' }->value : undef )
-	);
-
-	if ( $demo->token ) {
-		$page_session->{ 'name' } = $demo->name;
-		$page_session->{ 'artist_name' } = $demo->artist_name;
-		$page_session->{ 'country_id' } = $demo->country_id;
-
+	if ( $page_session and $page_session->{'token'} ) {
+		$demo->token( $page_session->{'token'} );
 	} else {
 		$demo->generate_token;
+		$page_session->{ 'token' } = $demo->token;
 	}
 
-	$page_session->{ 'token' } = $demo->token;
 	$page_session->{ 'sent_to_other' } ||= 0;
 	$page_session->{ 'send_by' } ||= 'link';
 	$page_session->{ 'logged_in' } = ( $user->{ 'username' } ? 'true' : 'false' );
 	
-	#warn Dumper $user;
+	session 'demo' => $page_session;
 
 	$demo->populate_countries;
-
-	session 'demo' => $page_session;
 
 	template 'demo', {
 		'page_title' => 'Send Demo',
@@ -619,46 +611,31 @@ get '/demo' => sub {
 	};	
 };
 
-get '/upload' => require_login sub {
-	template 'upload', { 
-		JSON => undef
-	};
-};
-
-post '/upload' => require_login sub {
-	my $params = params;
-
-	#warn Dumper $params;
-
-	my $data = request->upload( 'file' );
- 
-    my $dir = path('/mnt/acidworx/uploads');
-    mkdir $dir if not -e $dir;
-
-    my $path = path($dir, $data->basename) or die $!;
- 	$data->copy_to($path) or die $!;
- 	#$data->unlink_tmpfile;
-};
-
 post '/demo' => sub {
 	my $params = params;
-
-	session 'demo' => {} unless session( 'demo' );
-
 	my $page_session = session 'demo';
 
 	for my $param ( keys %$params ) {
-		$page_session->{ 'demo' }{ $param } = $params->{ $param };
+		$page_session->{ ( $param eq 'send_by' ? 'sent_by' : $param ) } = $params->{ $param };
 	}
 
-	$page_session->{ 'demo' }{ 'sent_to_other' } ||= 0;
+	$page_session->{ 'sent_to_other' } ||= 0;
 
- 	session 'demo' => $page_session->{ 'demo' };
+ 	session 'demo' => $page_session;
+
+ 	if ( $params->{ 'send_by' } eq 'link' and not $params->{files} ) {
+ 		warn "No files sent in upload mode";
+ 	} else {
+
+ 	}
 
 	my $demo = AcidWorx::Demo->new (
 		'dbh' => database,
-		params,
+		%$page_session,
 	);
+
+	$demo->token( $page_session->{ 'token' } ) 
+		if exists $page_session->{ 'token' };
 
 	if ( $demo->error ) {
 		my $errors = $demo->errors;
@@ -676,7 +653,9 @@ post '/demo' => sub {
 
 	} else {
 		$demo->save;
+		#session 'demo' => undef;
 
+		# The token here will no longer work. rethink this !!
 		cookie(
 			'artist' => $demo->token, 
 			'http_only' => 1, 
@@ -688,10 +667,48 @@ post '/demo' => sub {
 };
 
 get '/demo_thankyou' => sub {
+	session 'demo' => undef;
 	template 'demo_thankyou', {
 		'page_title' => 'Thank You',
 		'JSON' => $json,
 	};
+};
+
+# Upload file
+get '/upload' => require_login sub {
+	template 'upload', { 
+		JSON => undef
+	};
+};
+
+post '/upload' => require_login sub {
+	my $params = params;
+	my $page_session = session 'demo';
+
+	my $data = request->upload( 'file' );
+ 
+    my $dir = path('/mnt/acidworx/uploads/' . $page_session->{ 'token' } . '/');
+    mkdir $dir if not -e $dir;
+
+    my $path = path($dir, $data->basename) or die $!;
+ 	$data->copy_to($path) or die $!;
+
+ 	my $file = AcidWorx::File->new(
+ 		'token' => $page_session->{ 'token' },
+ 		'filename' => $data->basename,
+ 		'path' => $path,
+ 		'dbh' => database,
+ 	);
+
+ 	$file->add;
+
+ 	push @{ $page_session->{ 'files' } }, {
+ 		'token' => $page_session->{ 'token' },
+ 		'filename' => $data->basename,
+ 		'path' => $path,
+ 	};
+
+ 	session 'demo' => $page_session;
 };
 
 # Release Management

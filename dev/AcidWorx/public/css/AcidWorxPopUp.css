@@ -15,15 +15,23 @@
 
 .pageError .pagePopUp {
   background-color: white;
-  height: 470px;
+  height: 300px;
   width: 600px;
   z-index: 100;
   position:fixed;
-  top: calc(50vh - 235px);
+  top: calc(50vh - 150px);
   left: calc(50vw - 300px);
   border-radius: 4px;
   //  -webkit-transition: width 1s, height 1s; /* Safari */
   //transition: width 1s, height 1s;
+}
+.pageError .pagePopUp h3 {
+  text-align: center;
+}
+.pageError .pagePopUp button {
+  position: absolute;
+  bottom: 24px;
+  //width: 90%;
 }
 
 .pageError .pagePopUp #emailIcon {
@@ -36,9 +44,19 @@
   //transition: width .5s, height .5s;
 }
 
-.pageError .error {
-  border: 1px solid black;
+.pageError .errors {
+  //border: 1px solid black;
+  height: 150px;
+
 }
+.pageError .error {
+  //border: 1px solid black;
+  width: 60%;
+  margin: 0 auto;
+  color: red;
+  padding: 4px;
+}
+
 
 
 @media (max-width: 500px)  {
@@ -48,9 +66,10 @@
   }
 
   .pageError .pagePopUp {
-    height: 360px !important;
+    height: 300px !important;
     width: 350px !important;
-    top: calc(50vh - 180px) !important;
+
+    top: calc(50vh - 150px) !important;
     left: calc(50vw - 175px) !important;
   }
 

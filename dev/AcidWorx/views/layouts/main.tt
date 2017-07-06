@@ -13,7 +13,7 @@
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
 <meta http-equiv="Content-type" content="text/html; charset=[% settings.charset %]" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
-<meta name="theme-color" content="#000000
+<meta name="theme-color" content="#000000" />
 
 <title>AcidWorx</title>
 <link rel="stylesheet" href="<% request.uri_base %>/css/style.css" />

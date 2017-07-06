@@ -1,16 +1,5 @@
 
-<div id="page">
-  <div id="pageHeader">
-        <span>Demo submission</span>
-  </div>
-  <br>
-<form method="post" action="new_artist">
-  <div class="centerContent noPadding">
+
   <p class=pageText>
   Your demo has been received and will be reviewed. If we think it suits our label we will contact you via email.
   </p>
-  </div>
-</form>
-
-
-</div>

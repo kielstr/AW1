@@ -2,10 +2,19 @@
 #tags_tagsinput {
   width: 97% !important;
 }
+div.tagsinput span.tag a,
+div.tagsinput span.tag {
+  color: #000;
+}
 
 #linkContainer {
   display: none;
 }
+
+#fileUploadContainer {
+  display: none;
+}
+
 
 #emailConfirmCode {
   width: 300px;
@@ -32,7 +41,7 @@
     background-repeat: no-repeat;
     background-size: 88% 120%;
     background-position: 53% 75%;
-    
+    display: block;
 }
 .dz-message {
   color: #000;
