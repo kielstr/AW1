@@ -44,6 +44,7 @@ $(function() {
       description : "<%session.demo.demo_desc%>",
       token: "<%session.demo.token%>",
       files : [],
+      files2 : [],
       description : "<%session.demo.demo_desc%>",
       sendBy : "<%session.demo.send_by%>",
       linkURL : null,
@@ -120,38 +121,36 @@ $(function() {
           acidworx.demo.errors.push("send by as link but URL is invalid");
         }
 
-
         return (acidworx.demo.errors.length === 0) ? true : false;
 
       }
     };
 
 
-  if( acidworx.demo.sendBy == "upload" ) {
-    $("#linkContainer").hide();
+    if( acidworx.demo.sendBy == "upload" ) {
+      $("#linkContainer").hide();
 
-    if (acidworx.demo.loggedIn === true) {
-      $("#fileUploader").show();
+      if (acidworx.demo.loggedIn === true) {
+        $("#fileUploader").show();
+      } else {
+        $(".noLoginUpload").show();
+      }
+      //acidworx.demo.sendBy = "upload";
     } else {
-      $(".noLoginUpload").show();
+      $("#linkContainer").show();
+
+      if (acidworx.demo.loggedIn === true) {
+        $("#fileUploader").hide();
+      } else {
+        $(".noLoginUpload").hide();
+      }
+
+      //acidworx.demo.sendBy = "link";
     }
-    //acidworx.demo.sendBy = "upload";
-  } else {
-    $("#linkContainer").show();
-
-    if (acidworx.demo.loggedIn === true) {
-      $("#fileUploader").hide();
-    } else {
-      $(".noLoginUpload").hide();
-    }
-
-    //acidworx.demo.sendBy = "link";
-  }
-
 
     $('#tags').tagsInput({
       'width' : 'auto', 
-      'height' :'27px',
+      'height' :'50px',
       //'width':'300px',
       'defaultText' : '',
       'placeholderColor' : '#000000',
@@ -211,7 +210,6 @@ $(function() {
 </div>
 
 <div id="demoText">
-  <div class="pageText">
   <h3>We prefer receiving 320kbps mp3’s files and untimed download links. </h3>
   Here you will find everything you need to send your demo to us. 
   <br>
@@ -232,7 +230,6 @@ $(function() {
   Good Luck!!
   <br>
   <br>
-  </div>
 </div>
 
 <br>
@@ -323,7 +320,6 @@ $(function() {
 </div>
 <%END%>
 <br>
-
 <div>
   <textarea id="demoDesc" cols="20" rows="10" name="descripton" required><%session.demo.demo_desc%></textarea>
   <label for="demoDesc">Demo desription</label>
@@ -333,5 +329,5 @@ $(function() {
 <br>
 <button type="button" value="Submit Demo" id="submitButton">Submit Demo</button>
 </form>
-
+<br>
 </fieldset>

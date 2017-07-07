@@ -22,6 +22,17 @@ $(function() {
 	    		// push into 
 	    		acidworx.demo.files.push(file.name);
 
+	    		acidworx.demo.files2.push({
+    				name : file.name,
+    				status : 'added'
+	    		});
+
+	    		var current_file = acidworx.demo.files2.find(function (file) {
+	    			return file.name === file.name;
+	    		})
+
+	    		console.log(current_file);
+
 				if (acidworx.demo.mode === "validating" && $(".dropzone").hasClass("borderRed")) {
 					console.log("add file -- removing red border class");
 				  	$(".dropzone").removeClass("borderRed");
@@ -35,7 +46,18 @@ $(function() {
 
 		    	// tell server.
 
-		    	console.log('Client: I have removed file ' + file.name);
+		    	var current_file = acidworx.demo.files2.find(function (curr_file) {
+	    			return curr_file.name === file.name;
+	    		})
+
+				current_file.status = "removed";
+
+				var indexOfCurrFile = acidworx.demo.files2.findIndex(i => i.name === file.name);
+				acidworx.demo.files2.splice(indexOfCurrFile, 1);
+
+	    		//console.log(current_file);
+
+		    	//console.log('Client: I have removed file ' + file.name);
 
 		    	$.ajax({
 		            url: '/api/demo/remove-file/' +  file.name,
@@ -64,26 +86,52 @@ $(function() {
 		    	var index = acidworx.demo.files.indexOf(file.name);
 		    	// mark file as sending
 		    	//alert("upload sending");
+		    	var current_file = acidworx.demo.files2.find(function (curr_file) {
+	    			return curr_file.name === file.name;
+	    		})
+
+				current_file.status = "sending";
 		    }),
 		    this.on("success", function(file) {  
 		    	var index = acidworx.demo.files.indexOf(file.name);
 		    	// mark file as successful
 		    	//alert("upload successful");
+
+		    	var current_file = acidworx.demo.files2.find(function (curr_file) {
+	    			return curr_file.name === file.name;
+	    		})
+
+				current_file.status = "success";
 		    }),
 		    this.on("canceled", function(file) {  
 		    	var index = acidworx.demo.files.indexOf(file.name);
 		    	// mark file as canceled
 		    	//alert("upload canceled");
+		    	var current_file = acidworx.demo.files2.find(function (curr_file) {
+	    			return curr_file.name === file.name;
+	    		})
+
+				current_file.status = "canceled";
 		    }),
 		    this.on("error", function(file, errorMessage) {  
 		    	var index = acidworx.demo.files.indexOf(file.name);
 		    	// mark file as error
 		    	//alert("upload error: " + errorMessage);
+		    	var current_file = acidworx.demo.files2.find(function (curr_file) {
+	    			return curr_file.name === file.name;
+	    		})
+
+				current_file.status = "failed";
 		    }),
 			this.on("complete", function(file, errorMessage) {  
 		    	var index = acidworx.demo.files.indexOf(file.name);
 		    	// mark file as complete
 		    	//alert("upload complete");
+		    	var current_file = acidworx.demo.files2.find(function (curr_file) {
+	    			return curr_file.name === file.name;
+	    		})
+
+				current_file.status = "complete";
 		    });
 
 		 }
@@ -249,13 +297,22 @@ $(function() {
 
 		var status = acidworx.demo.valid();
 		console.log("return status from valid: " + status);
-		if ( status == true ) {
+
+		var incomplete_files = acidworx.demo.files2.find(function (curr_file) {
+			return curr_file.status != "complete";
+		});
+
+		if ( status == true && ! incomplete_files ) {
 			console.log("submit form now");
 			$("#demoForm").submit();
 		} else {
 			//$(window).scrollTop(300);
 
 			var errorStr = "";
+
+			if ( incomplete_files ) {
+				acidworx.demo.errors.push("Upload in-progress.");
+			}
 
 			$.each( acidworx.demo.errors, function (index, value) {
 				errorStr += "<div class=error>"+value+"</div>";
@@ -273,4 +330,9 @@ $(function() {
 		$(".pageError").hide();
 		$(".pageShadow").hide();
 	});
+
+	//$(window).unload(function() {
+	//	console.log("bye!");
+	//});
+
 });
