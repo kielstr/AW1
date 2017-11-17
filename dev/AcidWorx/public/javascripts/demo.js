@@ -331,6 +331,20 @@ $(function() {
 		$(".pageShadow").hide();
 	});
 
+	var index = 1;
+	$('.addLink').click(function(){
+		var this_index = index + 1;
+
+		var html = '<br><br><div id="link' + this_index + 'Container">'
+		  			+ '<input id="link' + this_index + '" type="text" name="link' + this_index + '" id="link' + this_index + '" required>'
+		  			+ '<label for="link' + this_index + '">Link to your demo</label>'
+					+'</div><br>';
+		console.log(html);
+		$("#link" + index + 'Container').append(html);
+		index++;
+	});
+
+
 	//$(window).unload(function() {
 	//	console.log("bye!");
 	//});

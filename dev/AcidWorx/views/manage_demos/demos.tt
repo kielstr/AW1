@@ -1,167 +1,32 @@
-
-
-<style>
-.demoTile {
-  height: 400px;
-  width: 400px;
-  margin: 0 auto;
-  background-color: #FFF;
-  border: 1px solid black;
-  //float: left;  
-  margin-left: 10px;
-  display: inline-block;
-  border-radius: 10px;
-  margin-bottom: 15px;
-}
-
-.tileContainer {
-  width: 71%;
-    margin: 0 auto;
-  //border: 1px solid black;
-}
-
-.demoTileHeading {
-  height: 50px;
-  //border: 1px dotted black;
-
-  line-height: 50px;
-  font-size: 26px;
-  font-weight: bold;
-}
-
-.demoTileDetails {
-  //height: 50%;
-  //border: 1px dotted red;
-  min-height: 200px;
-}
-
-.demoTileDetailsContainer {
-  border: 1px solid black;
-  
-    font-size: 12px;
-    text-align: left;
-
-    width: 70%;
-    margin: 0 auto;
-    padding: 5px;
-
-}
-
-.demoTileFiles {
-  width: 100%;
-}
-
-.demoTileFiles div {
-    display: inline-block;
-}
-@media (max-width: 500px)  {
-  .tileContainer {
-    width: 90%;
-  }
-  .demoTile {
-    width: 100%;
-    margin: 0px;
-    margin-bottom: 15px;
-  }
-}
-
-</style>
+<link rel="stylesheet" type="text/css" href="/css/demoTiles.css">
 
 <%IF demos %>
   <form method="post" action="/manage_demos/new_demos">
 
-  <div class="tileContainer center">
+  <div class="demoTiles">
+
   <%FOR demo IN demos%>
-    <div class="demoTile">
-
-      <div class="demoTileHeading"><%demo.artist_name%></div>
-
-      <div class="demoTileDetails">
-        <div class="demoTileDetailsContainer">
-
-          <div class="table widthFull heightFull">
-            <div class="row">
-              <div class="cell">Name:</div>
-              <div class="cell"><%demo.name%></div>
-            </div>
-
-            <div class="row">
-              <div class="cell">Artist Name:</div>
-              <div class="cell"><%demo.artist_name%></div>
-            </div>
-
-            <div class="row">
-              <div class="cell">Country:</div>
-              <div class="cell"><%demo.country_id%></div>
-            </div>
-
-            <div class="row">
-              <div class="cell">Email:</div>
-              <div class="cell"><%demo.email%></div>
-            </div>
-
-            <div class="row">
-              <div class="cell">email_confirmed:</div>
-              <div class="cell"><%demo.email_confirmed%></div>
-            </div>
-            
-            <div class="row">
-              <div class="cell">Link:</div>
-              <div class="cell"><a href="<%demo.link%>">download</a></div>
-            </div>
-
-            <div class="row">
-              <div class="cell">submited_date:</div>
-              <div class="cell"><%demo.submited_date%></div>
-            </div>
-
-            <div class="row">
-              <div class="cell">sent_by:</div>
-              <div class="cell"><%demo.sent_by%></div>
-            </div>
-            
-            <div class="row">
-              <div class="cell">approved:</div>
-              <div class="cell"><%demo.approved%></div>
-            </div>
-
-            <div class="row">
-              <div class="cell">description:</div>
-              <div class="cell"><%demo.description%></div>
-            </div>
-
-            <div class="row">
-              <div class="cell">released_on:</div>
-              <div class="cell"><%demo.released_on%></div>
-            </div>
-
-          </div>
-        </div>
-      </div>
-
+    <div class="tile center">
+      submitted: <%demo.submited_date%>
+      <h3><%demo.artist_name%></h3>
+      <div class="detailLabel">Name: </div><div class="detailItem"><%demo.name%></div>
+      <div class="detailLabel">Country: </div><div class="detailItem"><%demo.country_id%></div>
+      <div class="detailLabel">Email: </div><div class="detailItem"><%demo.email%></div>
+      <div class="detailLabel">Sent to other labels: </div><div class="detailItem"><%demo.sent_to_other%></div>
+      <div class="detailLabel">Labels released on: </div><div class="detailItem"><%demo.released_on%></div>
       <div class="demoTileFiles">
-        <h3>FILES</h3>
+        <h4>FILES</h4>
         <div><img src="/images/icons/demoManagementIcon.png"><br><a href="">filename</a></div>
         <div><img src="/images/icons/demoManagementIcon.png"><br><a href="">filename</a></div>
         <div><img src="/images/icons/demoManagementIcon.png"><br><a href="">filename</a></div>
         <div><img src="/images/icons/demoManagementIcon.png"><br><a href="">filename</a></div>
-        <<div><img src="/images/icons/demoManagementIcon.png"><br><a href="">filename</a></div>
+        <div><img src="/images/icons/demoManagementIcon.png"><br><a href="">filename</a></div>
       </div>
-        
-            <!--<div>Approve: 
-              <div>
-                <input type="radio" name="approve_<%demo.token%>" value="1">Yes
-                <input type="radio" name="approve_<%demo.token%>" value="0">No
-              </div>
-            -->
     </div>
   <%END%>
-  </div>  
 
-    <br>
-    <div class="width90Percent center">
-      <button type="submit" value="update">Update</button>
-    </div>
+  </div>
+
 <%ELSE%>
   <div class="table width90Percent centerTable">
     <div class="row">
@@ -170,5 +35,5 @@
   </div>
 <%END%>
 <pre>
-<% USE Dumper; Dumper.dump_html({ demos => demos }) %>
+<% #USE Dumper; Dumper.dump_html({ demos => demos }) %>
 </pre>

@@ -7,6 +7,8 @@ use Dancer2::Plugin::Auth::Extensible;
 
 use v5.20;
 use AcidWorx::Email;
+use AcidWorx::Link;
+use AcidWorx::File;
 
 use Data::Dumper qw(Dumper);
 
@@ -15,9 +17,7 @@ our $VERSION = '0.1';
 set serializer => 'JSON';
 
 get '/' => sub {
-
 	return {test => 1, test2 => 2};
-
 };
 
 get '/confirm_email_send/:token/:email/:name' => sub {
@@ -101,7 +101,7 @@ get '/demo/remove-file/:filename' => require_login sub {
 
     		my $file = AcidWorx::File->new(
 		 		'token' => $demo_session->{ 'token' },
-		 		'filename' => $file->{ 'filename' },
+		 		'filename' => params->{ 'filename' },
 		 		'dbh' => database,
 		 	);
 
@@ -114,6 +114,31 @@ get '/demo/remove-file/:filename' => require_login sub {
 	session 'demo' => $demo_session;
 
 	return {status => 'ok'};
+};
+
+
+get '/demo/add-link/:token/:link' => sub {
+	my $link = AcidWorx::Link->new(
+ 		'token' => params->{ 'token' },
+ 		'link' => params->{ 'link' },
+ 		'dbh' => database,
+ 	);
+
+ 	$link->add;
+
+	return { status => 'ok' };
+};
+
+get '/demo/remove-link/:token/:link' => sub {
+	my $link = AcidWorx::Link->new(
+ 		'token' => params->{ 'token' },
+ 		'link' => params->{ 'link' },
+ 		'dbh' => database,
+ 	);
+
+ 	$link->remove;
+
+	return { status => 'ok' };
 };
 
 

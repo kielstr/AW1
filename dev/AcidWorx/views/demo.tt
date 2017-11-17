@@ -302,8 +302,12 @@ $(function() {
 
 <br>
 <div class="" id="linkContainer">
-  <input id="link" type="text" name="link" id="link" value="<%session.demo.link%>" required>
-  <label for="link">Link to your demo</label>
+  <div id="link1Container">
+    <input id="link1" type="text" name="link1" id="link1" value="<%session.demo.link%>" required>
+    <label for="link1">Link to your demo</label>
+  </div>
+  <br>
+  <button type="button" class="addLink">Add</button>
 </div>
 <%IF session.demo.logged_in == 'true' %>
 

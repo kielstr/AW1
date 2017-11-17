@@ -339,6 +339,7 @@ form > div {
   position: relative;
 }
 
+form > #linkContainer > div > label,
 form > div > label {
   position: absolute;
   top: 8px;
@@ -350,6 +351,7 @@ form > div > label {
   font-size: 14px;
 }
 
+form > #linkContainer > div > input,
 form > div > select,
 form > div > input {
 	height: 37px;
@@ -366,6 +368,8 @@ form > div > div > input[type="radio"] {
 form > div > select {
 	width: 99%;
 }
+
+form > #linkContainer > div > input,
 form > div > input {
 	padding-left: 5px;
 	margin-right: 20px;
@@ -378,9 +382,11 @@ form > div > textarea {
 }
 
 form > div > textarea:focus + label,
+form > #linkContainer > div > input:focus + label,
 form > div > input:focus + label,
 form > div > textarea:valid + label,
-form > div > input:valid + label {
+form > div > input:valid + label,
+form > #linkContainer > div > input:valid + label {
 	bottom: 100%;
   	margin-top: -16px;
   	font-size: 14px;
@@ -398,6 +404,7 @@ form > div > span {
 
 form > div > textarea:focus,
 form > div > input:focus,
+form > #linkContainer > div > input:focus,
 form > div > textarea:valid,
 form > div > input:valid {
 	outline-width: 0;

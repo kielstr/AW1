@@ -16,7 +16,6 @@ sub BUILD {
 	$self->populate unless $self->dont_populate;
 }
 
-
 sub populate {
 	my $self = shift;
 
