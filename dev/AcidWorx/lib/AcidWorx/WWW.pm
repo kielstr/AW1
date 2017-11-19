@@ -820,12 +820,15 @@ get '/user_management/edit' => require_role Admin => sub {
 
 		my $user_details = get_user_details( $username );
 
+		my $dir = path(config->{appdir}, '/public/images/profile');
+			
 		return template 'user_management/user', {
 			'page_title' => 'Edit User',
 			'back_url' => '/',
 			'mode' => 'edit',
 			'JSON' => $json,
 			'user_details' => $user_details,
+			'dir' => $dir,
 		};
 
 	} else {

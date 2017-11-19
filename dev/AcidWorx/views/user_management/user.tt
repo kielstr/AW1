@@ -1,4 +1,5 @@
 <fieldset>
+	DIR: <%dir%>
 	<legend>User</legend>
 	<form action="/user_management/<%mode%>" novalidate="novalidate" method="post" enctype="multipart/form-data">
 	<br>
