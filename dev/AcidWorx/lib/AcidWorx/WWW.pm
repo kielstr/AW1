@@ -687,7 +687,7 @@ post '/upload' => require_login sub {
 
 	my $data = request->upload( 'file' );
  
-    my $dir = path('/mnt/acidworx/uploads/' . $page_session->{ 'token' } . '/');
+    my $dir = path('/acidworx/uploads/' . $page_session->{ 'token' } . '/');
     mkdir $dir if not -e $dir;
 
     my $path = path($dir, $data->basename) or die $!;
