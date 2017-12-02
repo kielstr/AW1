@@ -32,8 +32,12 @@ hook before => sub {
 	});
 };
 
-get '/' => require_login sub {
+get '/' =>  sub {
 	
+	my $database = database;
+
+	die "not connected to the database" unless $database;
+
     template 'index', {
     	'page_title' => 'Management',
     	'profile_image' => $user->{ 'image' },

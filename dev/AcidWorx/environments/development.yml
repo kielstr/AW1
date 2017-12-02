@@ -47,7 +47,7 @@ plugins:
     Database:
         driver: 'mysql'
         database: 'acidworx'
-        host: 'db'
+        host: 'mysql'
         port: 3306
         username: 'acidworx'
         password: 'TrippyMoon1234'

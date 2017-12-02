@@ -123,10 +123,10 @@ $( document ).ready(function () {
 
 <div id="footer"></div>
 <%IF session.logged_in_user == 'acidchild' %>
-<!--<pre>
-<% #USE Dumper; Dumper.dump_html({ session => session }) %>
+<pre>
+<% USE Dumper; Dumper.dump_html({ session => session }) %>
 </pre>
--->
+
 <%END%>
 
 </body>
